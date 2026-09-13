@@ -66,7 +66,7 @@ const retainedOffsets = {
 } as const;
 
 const payloadBoatOverview = {
-  src: "/images/payload-boat/payload-boat-overview.png",
+  src: "/images/payload-boat/payload-boat-overview.png?v=2",
   alt: "酬載船完整示意圖，包含船舵、推進器、伺服馬達、通訊艙與電池盒",
   width: "82%",
   aspectRatio: "1653 / 849",
@@ -128,12 +128,14 @@ function StructureImage({
   label,
   sizes,
   className = "object-contain p-5 sm:p-8",
+  unoptimized = false,
 }: {
   src: string;
   alt: string;
   label: string;
   sizes: string;
   className?: string;
+  unoptimized?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
 
@@ -160,6 +162,7 @@ function StructureImage({
           alt={alt}
           fill
           sizes={sizes}
+          unoptimized={unoptimized}
           className={className}
           onError={() => setFailed(true)}
         />
@@ -168,7 +171,17 @@ function StructureImage({
   );
 }
 
-function PartImage({ src, alt, label }: { src: string; alt: string; label: string }) {
+function PartImage({
+  src,
+  alt,
+  label,
+  unoptimized = false,
+}: {
+  src: string;
+  alt: string;
+  label: string;
+  unoptimized?: boolean;
+}) {
   const [failed, setFailed] = useState(false);
 
   if (failed) {
@@ -185,6 +198,7 @@ function PartImage({ src, alt, label }: { src: string; alt: string; label: strin
       alt={alt}
       fill
       sizes="30vw"
+      unoptimized={unoptimized}
       className="object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,0.55)]"
       onError={() => setFailed(true)}
     />
@@ -328,6 +342,7 @@ function PayloadBoatOverviewLayer({ activeFrame }: { activeFrame: number }) {
           src={payloadBoatOverview.src}
           alt={payloadBoatOverview.alt}
           label="酬載船完整示意圖"
+          unoptimized
         />
 
         <div aria-hidden="true" className="absolute inset-0 z-10">
@@ -367,13 +382,17 @@ function PayloadBoatOverviewLayer({ activeFrame }: { activeFrame: number }) {
 
 function ExplodedRocketVisual({
   activeFrame,
+  stageFiveRun,
   shouldReduceMotion,
 }: {
   activeFrame: number;
+  stageFiveRun: number;
   shouldReduceMotion: boolean;
 }) {
   const [scope, animate] = useAnimate();
+  const [completedLogoRun, setCompletedLogoRun] = useState(-1);
   const partFrames: Record<RocketPart, number> = { nose: 1, payload: 2, fin: 4 };
+  const showLogo = activeFrame === 5 && completedLogoRun === stageFiveRun;
 
   const animationMode =
     activeFrame === 0
@@ -401,7 +420,6 @@ function ExplodedRocketVisual({
     }
 
     const stageFiveSequence: AnimationSequence = [
-      // Reassemble every foreground part at the position it occupies in rocket-full.
       [
         '[data-part-position="nose"]',
         { left: `${rocketAnchors.nose.x}%`, top: `${rocketAnchors.nose.y}%` },
@@ -434,8 +452,6 @@ function ExplodedRocketVisual({
       ],
       ["[data-exhaust]", { opacity: 0, scaleX: 0.35 }, { duration: 0, at: 0 }],
       ["[data-smoke]", { opacity: 0, scale: 0.65 }, { duration: 0, at: 0 }],
-
-      // Once assembly is complete, swap the overlays for the clear full rocket.
       ["[data-part-visual]", { opacity: 0 }, { duration: 0.18, at: 0.62 }],
       [
         "[data-full-rocket]",
@@ -443,8 +459,6 @@ function ExplodedRocketVisual({
         { duration: 0.32, ease: "easeOut", at: 0.62 },
       ],
       ["[data-axis-guide]", { opacity: 0 }, { duration: 0.28, at: 0.62 }],
-
-      // Ignition hold: a short, restrained build-up before any upward movement.
       [
         "[data-exhaust]",
         { opacity: [0, 0.95, 0.78], scaleX: [0.35, 1.08, 1] },
@@ -455,8 +469,6 @@ function ExplodedRocketVisual({
         { y: ["0%", "0.8%", "0%"], scale: [1, 0.995, 1] },
         { duration: 0.42, ease: "easeInOut", at: 0.94 },
       ],
-
-      // Launch only after reassembly and ignition have both finished.
       [
         "[data-flight-group]",
         {
@@ -472,8 +484,6 @@ function ExplodedRocketVisual({
         { opacity: [0.78, 1, 0.22], scaleX: [1, 1.35, 1.9] },
         { duration: 1.15, ease: "circIn", at: 1.36 },
       ],
-
-      // The vehicle has left the viewport; only a faint launch trace remains.
       [
         "[data-smoke]",
         {
@@ -486,9 +496,23 @@ function ExplodedRocketVisual({
       ["[data-exhaust]", { opacity: 0 }, { duration: 0.35, ease: "easeOut", at: 2.51 }],
     ];
 
+    let logoDelay: number | undefined;
+    let cancelled = false;
     const timelineControls = animate(stageFiveSequence);
-    return () => timelineControls.stop();
-  }, [activeFrame, animate, shouldReduceMotion]);
+
+    timelineControls.then(() => {
+      if (cancelled) return;
+      logoDelay = window.setTimeout(() => {
+        if (!cancelled) setCompletedLogoRun(stageFiveRun);
+      }, 400);
+    });
+
+    return () => {
+      cancelled = true;
+      if (logoDelay !== undefined) window.clearTimeout(logoDelay);
+      timelineControls.stop();
+    };
+  }, [activeFrame, animate, shouldReduceMotion, stageFiveRun]);
 
   const getPartState = (part: RocketPart) => {
     const anchor = rocketAnchors[part];
@@ -702,6 +726,28 @@ function ExplodedRocketVisual({
         <PayloadBoatOverviewLayer activeFrame={activeFrame} />
       </div>
 
+      <motion.div
+        data-final-logo
+        className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center will-change-transform"
+        initial={false}
+        animate={showLogo ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+        transition={
+          showLogo
+            ? { duration: 0.65, ease: "easeOut" }
+            : { duration: 0.2, ease: "easeOut" }
+        }
+      >
+        <div className="relative aspect-square w-[52%] drop-shadow-[0_0_28px_rgba(249,115,22,0.16)]">
+          <Image
+            src="/images/team-logo.png"
+            alt="火大的元件團隊 Logo"
+            fill
+            sizes="(min-width: 1280px) 28vw, 30vw"
+            className="object-contain"
+          />
+        </div>
+      </motion.div>
+
       <div className="pointer-events-none absolute inset-x-5 top-5 flex justify-between font-mono text-[0.7rem] tracking-[0.14em] text-slate-500">
         <span>YZU / HUODA</span>
         <span>EXPLODED STRUCTURE</span>
@@ -739,10 +785,11 @@ function StaticStages() {
         >
           <figure className="relative aspect-[4/3] border-b border-white/10 sm:aspect-[16/9]">
             <StructureImage
-              src={stage.image}
+              src={stage.stage === "STAGE 03" ? payloadBoatOverview.src : stage.image}
               alt={stage.imageAlt}
               label={stage.title}
               sizes="(min-width: 1024px) 70vw, 100vw"
+              unoptimized={stage.stage === "STAGE 03"}
               className={stage.stage === "STAGE 03" ? "object-contain p-2 sm:p-4" : undefined}
             />
           </figure>
@@ -757,8 +804,10 @@ function StaticStages() {
 
 export default function RocketStructureSection() {
   const scrollSectionRef = useRef<HTMLDivElement>(null);
+  const activeFrameRef = useRef(0);
   const shouldReduceMotion = useReducedMotion();
   const [activeFrame, setActiveFrame] = useState(0);
+  const [stageFiveRun, setStageFiveRun] = useState(0);
   const { scrollYProgress } = useScroll({
     target: scrollSectionRef,
     offset: ["start start", "end end"],
@@ -778,7 +827,11 @@ export default function RocketStructureSection() {
               : latest < 0.83
                 ? 4
                 : 5;
-    setActiveFrame((current) => (current === nextFrame ? current : nextFrame));
+
+    if (activeFrameRef.current === nextFrame) return;
+    if (nextFrame === 5) setStageFiveRun((current) => current + 1);
+    activeFrameRef.current = nextFrame;
+    setActiveFrame(nextFrame);
   });
 
   const frameLabels = [overview.stage, ...structureStages.map((stage) => stage.stage)];
@@ -888,6 +941,7 @@ export default function RocketStructureSection() {
             <div className="relative aspect-[16/11] max-h-[72vh] w-full overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950 shadow-[0_0_60px_rgba(249,115,22,0.08)]">
               <ExplodedRocketVisual
                 activeFrame={activeFrame}
+                stageFiveRun={stageFiveRun}
                 shouldReduceMotion={Boolean(shouldReduceMotion)}
               />
             </div>

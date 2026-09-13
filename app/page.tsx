@@ -150,11 +150,13 @@ export default function Home() {
           </div>
 
           <p className="mb-5 text-base font-semibold tracking-[0.08em] text-slate-300 sm:text-lg">
-            火大的元件｜元智大學學生火箭團隊
+            元智大學機械工程學系 | YZUME
           </p>
           <h1 className="text-balance text-5xl font-black leading-[1.06] tracking-[-0.045em] text-white sm:text-7xl lg:text-[5.75rem]">
-            下一枚火箭，
-            <span className="text-gradient block">從元智升空。</span>
+            火大的元件
+            <span className="block whitespace-nowrap bg-gradient-to-r from-white via-orange-300 to-orange-600 bg-clip-text text-[clamp(1.15rem,4.2vw,3rem)] leading-[1.25] text-transparent">
+              挑戰 2027 台灣盃火箭競賽
+            </span>
           </h1>
           <p
             className="mt-8 max-w-2xl scroll-mt-32 text-base leading-8 text-slate-300 sm:text-lg sm:leading-9"
@@ -227,8 +229,6 @@ export default function Home() {
           </ol>
         </div>
       </section>
-
-      <RocketStructureSection />
 
       <section
         id="about"
@@ -359,6 +359,8 @@ export default function Home() {
 
         </div>
       </section>
+
+      <RocketStructureSection />
 
       <section className="relative z-10 border-t border-white/10 bg-slate-950/55 px-5 py-24 sm:px-8 sm:py-28 lg:px-12 lg:py-36">
         <div className="mx-auto max-w-7xl">

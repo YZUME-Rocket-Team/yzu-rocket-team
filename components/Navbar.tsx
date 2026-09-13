@@ -37,66 +37,42 @@ export default function Navbar() {
 
     if (!header || sections.length === 0) return;
 
-    let observer: IntersectionObserver | undefined;
+    let animationFrame: number | null = null;
 
-    const observeSections = () => {
-      observer?.disconnect();
-
+    const updateActiveSection = () => {
+      animationFrame = null;
       const navbarHeight = Math.ceil(header.getBoundingClientRect().height);
-      const currentSection = sections
-        .filter((section) => section.getBoundingClientRect().top <= navbarHeight + 16)
-        .at(-1);
+      const readingLine =
+        navbarHeight + (window.innerHeight - navbarHeight) * 0.25;
+      let currentSection = sections[0];
 
-      if (currentSection) setActiveSection(currentSection.id);
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top > readingLine) break;
+        currentSection = section;
+      }
 
-      observer = new IntersectionObserver(
-        (entries) => {
-          const visibleEntry = entries
-            .filter((entry) => entry.isIntersecting)
-            .sort(
-              (first, second) =>
-                Math.abs(first.boundingClientRect.top - navbarHeight) -
-                Math.abs(second.boundingClientRect.top - navbarHeight),
-            )[0];
-
-          if (visibleEntry) {
-            setActiveSection(visibleEntry.target.id);
-            return;
-          }
-
-          const nearestSectionBelow = entries
-            .filter(
-              (entry) =>
-                !entry.isIntersecting && entry.boundingClientRect.top > navbarHeight,
-            )
-            .sort(
-              (first, second) =>
-                first.boundingClientRect.top - second.boundingClientRect.top,
-            )[0];
-
-          if (nearestSectionBelow) {
-            const nextSectionIndex = sectionIds.indexOf(nearestSectionBelow.target.id);
-            const previousSectionId = sectionIds[Math.max(0, nextSectionIndex - 1)];
-
-            if (previousSectionId) setActiveSection(previousSectionId);
-          }
-        },
-        {
-          rootMargin: `-${navbarHeight}px 0px -55% 0px`,
-          threshold: [0, 0.1, 0.35, 0.65],
-        },
+      setActiveSection((current) =>
+        current === currentSection.id ? current : currentSection.id,
       );
-
-      sections.forEach((section) => observer?.observe(section));
     };
 
-    observeSections();
-    const resizeObserver = new ResizeObserver(observeSections);
+    const scheduleUpdate = () => {
+      if (animationFrame !== null) return;
+      animationFrame = window.requestAnimationFrame(updateActiveSection);
+    };
+
+    updateActiveSection();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    const resizeObserver = new ResizeObserver(scheduleUpdate);
     resizeObserver.observe(header);
 
     return () => {
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
       resizeObserver.disconnect();
-      observer?.disconnect();
+      if (animationFrame !== null) window.cancelAnimationFrame(animationFrame);
     };
   }, []);
 
