@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --background: #050b14;
+  --foreground: #f8fafc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 75% 50%, rgb(30 41 59 / 45%), transparent 34rem),
+    linear-gradient(135deg, #050b14 0%, #0b1422 100%);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(rgb(148 163 184 / 7%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(148 163 184 / 7%) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, black 18%, transparent 92%);
+}
+
+.media-grid {
+  background-image:
+    linear-gradient(rgb(148 163 184 / 9%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(148 163 184 / 9%) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.text-gradient {
+  background: linear-gradient(100deg, #ffffff 5%, #fdba74 48%, #f97316 95%);
+  background-clip: text;
+  color: transparent;
+}
+
+::selection {
+  background: #f97316;
+  color: #ffffff;
+}
