@@ -29,21 +29,52 @@ const overview = {
 };
 
 const rocketAnchors = {
-  nose: { x: 6.5, y: 27.5, width: "8.5%", aspectRatio: "420 / 614", rotate: -74 },
-  payload: { x: 41, y: 44, width: "6.2%", aspectRatio: "277 / 790", rotate: -74 },
-  fin: { x: 78, y: 63, width: "23%", aspectRatio: "1258 / 506", rotate: 16 },
+  nose: {
+    x: 6.5,
+    y: 27.5,
+    width: "8.5%",
+    aspectRatio: "420 / 614",
+    rotate: -74,
+    anchorScale: 1,
+  },
+  payload: {
+    x: 41,
+    y: 44,
+    width: "6.2%",
+    aspectRatio: "277 / 790",
+    rotate: -74,
+    anchorScale: 1,
+  },
+  avionics: {
+    x: 55,
+    y: 50.5,
+    width: "64%",
+    aspectRatio: "1247 / 1261",
+    rotate: 16,
+    anchorScale: 0.125,
+  },
+  fin: {
+    x: 78,
+    y: 63,
+    width: "23%",
+    aspectRatio: "1258 / 506",
+    rotate: 16,
+    anchorScale: 1,
+  },
 } as const;
 
 const explodedOffsets = {
   nose: { x: -2.5, y: -3 },
   payload: { x: 0, y: -8 },
+  avionics: { x: -1.5, y: -8 },
   fin: { x: 10, y: 2.5 },
 } as const;
 
 const focusTargets = {
-  nose: { x: 42, y: 48, scale: 3.5 },
-  payload: { x: 43, y: 49, scale: 3.16 },
-  fin: { x: 43, y: 52, scale: 2.84 },
+  nose: { x: 42, y: 48, scale: 3.5, rotate: -74 },
+  payload: { x: 43, y: 49, scale: 3.16, rotate: -74 },
+  avionics: { x: 47, y: 50, scale: 1, rotate: -2 },
+  fin: { x: 43, y: 52, scale: 2.84, rotate: 16 },
 } as const;
 
 const launchVector = {
@@ -62,8 +93,11 @@ const exhaustAnchor = {
 const retainedOffsets = {
   nose: { x: 3, y: -4 },
   payload: { x: 0, y: -6 },
+  avionics: { x: 0, y: -5 },
   fin: { x: 5, y: 1.5 },
 } as const;
+
+const FINAL_STAGE_FRAME = 6;
 
 const payloadBoatOverview = {
   src: "/images/payload-boat/payload-boat-overview.png?v=2",
@@ -118,6 +152,14 @@ const payloadBoatLabels = [
     y: 68,
     accent: "#facc15",
   },
+] as const;
+
+const avionicsLabels = [
+  { id: "storage", title: "資料儲存", x: 2, y: 24 },
+  { id: "controller", title: "主控", x: 67, y: 43 },
+  { id: "imu", title: "IMU", x: 1, y: 68 },
+  { id: "barometer", title: "氣壓計", x: 24, y: 78 },
+  { id: "gps", title: "GPS", x: 51, y: 82 },
 ] as const;
 
 type RocketPart = keyof typeof rocketAnchors;
@@ -175,12 +217,16 @@ function PartImage({
   src,
   alt,
   label,
+  sizes = "30vw",
   unoptimized = false,
+  highDetail = false,
 }: {
   src: string;
   alt: string;
   label: string;
+  sizes?: string;
   unoptimized?: boolean;
+  highDetail?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
 
@@ -197,16 +243,49 @@ function PartImage({
       src={src}
       alt={alt}
       fill
-      sizes="30vw"
+      sizes={sizes}
       unoptimized={unoptimized}
-      className="object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,0.55)]"
+      className={
+        highDetail
+          ? "object-contain"
+          : "object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,0.55)]"
+      }
       onError={() => setFailed(true)}
     />
   );
 }
 
+function AvionicsLabels({ active = true }: { active?: boolean }) {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10">
+      {avionicsLabels.map((label, index) => (
+        <motion.div
+          key={label.id}
+          initial={false}
+          animate={{ opacity: active ? 1 : 0, y: active ? 0 : 6 }}
+          transition={{
+            duration: active ? 0.28 : 0.18,
+            delay: active ? 0.48 + index * 0.055 : 0,
+            ease: "easeOut",
+          }}
+          className="absolute whitespace-nowrap font-mono [text-shadow:0_2px_8px_rgba(0,0,0,0.95)]"
+          style={{ left: `${label.x}%`, top: `${label.y}%` }}
+        >
+          <div className="flex items-center gap-1.5">
+            <span aria-hidden="true" className="h-px w-3 bg-orange-400" />
+            <span className="text-[0.62rem] font-bold tracking-[0.08em] text-white sm:text-xs">
+              {label.title}
+            </span>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
 function StageDetails({ stage, compact = false }: { stage: StructureStage; compact?: boolean }) {
-  const isVerification = stage.stage === "STAGE 05";
+  const isAvionics = stage.stage === "STAGE 04";
+  const isVerification = stage.stage === "STAGE 06";
 
   return (
     <div>
@@ -220,13 +299,76 @@ function StageDetails({ stage, compact = false }: { stage: StructureStage; compa
       >
         {stage.title}
       </h3>
+      {stage.subtitle ? (
+        <p className="mt-2 text-lg font-bold tracking-wide text-orange-200">{stage.subtitle}</p>
+      ) : null}
       {stage.introduction ? (
         <p className={`mt-4 text-slate-300 ${compact ? "text-sm leading-6" : "text-base leading-8"}`}>
           {stage.introduction}
         </p>
       ) : null}
 
-      <ol
+      {isAvionics && stage.specifications ? (
+        <dl
+          className={`grid border-y border-white/10 ${
+            compact ? "mt-5 grid-cols-3" : "mt-7 sm:grid-cols-3"
+          }`}
+        >
+          {stage.specifications.map((specification) => (
+            <div
+              key={specification.label}
+              className={`border-white/10 py-3.5 ${
+                compact
+                  ? "border-r px-3 last:border-r-0"
+                  : "border-b px-4 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"
+              }`}
+            >
+              <dt className="font-mono text-[0.68rem] font-bold tracking-[0.15em] text-orange-400">
+                {specification.label}
+              </dt>
+              <dd className="mt-3">
+                {specification.value ? (
+                  <span className="block font-mono text-xl font-black text-white">
+                    {specification.value}
+                  </span>
+                ) : null}
+                {specification.details.map((detail) => (
+                  <span key={detail} className="block text-xs leading-5 text-slate-400">
+                    {detail}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+
+      {isAvionics && stage.mainSystems ? (
+        <div className={compact ? "mt-5" : "mt-7"}>
+          <p className="font-mono text-[0.68rem] font-bold tracking-[0.16em] text-slate-500">
+            COMPONENT INDEX
+          </p>
+          <dl className="mt-2">
+            {stage.mainSystems.map((system) => (
+              <div
+                key={system.title}
+                className={`grid items-baseline border-t border-white/10 ${
+                  compact
+                    ? "grid-cols-[5.25rem_1fr] gap-3 py-1.5"
+                    : "grid-cols-[6.5rem_1fr] gap-4 py-2"
+                }`}
+              >
+                <dt className="text-xs font-bold text-white">{system.title}</dt>
+                <dd className="font-mono text-[0.68rem] leading-5 text-slate-400/80">
+                  {system.description}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      ) : null}
+
+      {!isAvionics ? <ol
         className={
           isVerification
             ? compact
@@ -259,7 +401,7 @@ function StageDetails({ stage, compact = false }: { stage: StructureStage; compa
             </p>
           </li>
         ))}
-      </ol>
+      </ol> : null}
 
       {stage.conclusion ? (
         <p
@@ -382,29 +524,29 @@ function PayloadBoatOverviewLayer({ activeFrame }: { activeFrame: number }) {
 
 function ExplodedRocketVisual({
   activeFrame,
-  stageFiveRun,
+  stageSixRun,
   shouldReduceMotion,
 }: {
   activeFrame: number;
-  stageFiveRun: number;
+  stageSixRun: number;
   shouldReduceMotion: boolean;
 }) {
   const [scope, animate] = useAnimate();
   const [completedLogoRun, setCompletedLogoRun] = useState(-1);
-  const partFrames: Record<RocketPart, number> = { nose: 1, payload: 2, fin: 4 };
-  const showLogo = activeFrame === 5 && completedLogoRun === stageFiveRun;
+  const partFrames: Record<RocketPart, number> = { nose: 1, payload: 2, avionics: 4, fin: 5 };
+  const showLogo = activeFrame === FINAL_STAGE_FRAME && completedLogoRun === stageSixRun;
 
   const animationMode =
     activeFrame === 0
       ? "assembled"
-      : activeFrame === 5
+      : activeFrame === FINAL_STAGE_FRAME
         ? "reassembling-and-launching"
         : "focusing-part";
 
   useEffect(() => {
     if (shouldReduceMotion) return;
 
-    if (activeFrame !== 5) {
+    if (activeFrame !== FINAL_STAGE_FRAME) {
       const resetSequence: AnimationSequence = [
         [
           "[data-flight-group]",
@@ -419,7 +561,7 @@ function ExplodedRocketVisual({
       return () => resetControls.stop();
     }
 
-    const stageFiveSequence: AnimationSequence = [
+    const stageSixSequence: AnimationSequence = [
       [
         '[data-part-position="nose"]',
         { left: `${rocketAnchors.nose.x}%`, top: `${rocketAnchors.nose.y}%` },
@@ -431,13 +573,28 @@ function ExplodedRocketVisual({
         { duration: 0.62, ease: "easeInOut", at: 0 },
       ],
       [
+        '[data-part-position="avionics"]',
+        { left: `${rocketAnchors.avionics.x}%`, top: `${rocketAnchors.avionics.y}%` },
+        { duration: 0.62, ease: "easeInOut", at: 0 },
+      ],
+      [
         '[data-part-position="fin"]',
         { left: `${rocketAnchors.fin.x}%`, top: `${rocketAnchors.fin.y}%` },
         { duration: 0.62, ease: "easeInOut", at: 0 },
       ],
       [
-        "[data-part-visual]",
+        '[data-part-visual]:not([data-part-visual="avionics"])',
         { opacity: 0.42, scale: 0.9, filter: "brightness(0.62)" },
+        { duration: 0.62, ease: "easeInOut", at: 0 },
+      ],
+      [
+        '[data-part-visual="avionics"]',
+        {
+          opacity: 0.42,
+          scale: rocketAnchors.avionics.anchorScale * 0.9,
+          rotate: rocketAnchors.avionics.rotate,
+          filter: "none",
+        },
         { duration: 0.62, ease: "easeInOut", at: 0 },
       ],
       [
@@ -498,12 +655,12 @@ function ExplodedRocketVisual({
 
     let logoDelay: number | undefined;
     let cancelled = false;
-    const timelineControls = animate(stageFiveSequence);
+    const timelineControls = animate(stageSixSequence);
 
     timelineControls.then(() => {
       if (cancelled) return;
       logoDelay = window.setTimeout(() => {
-        if (!cancelled) setCompletedLogoRun(stageFiveRun);
+        if (!cancelled) setCompletedLogoRun(stageSixRun);
       }, 400);
     });
 
@@ -512,14 +669,15 @@ function ExplodedRocketVisual({
       if (logoDelay !== undefined) window.clearTimeout(logoDelay);
       timelineControls.stop();
     };
-  }, [activeFrame, animate, shouldReduceMotion, stageFiveRun]);
+  }, [activeFrame, animate, shouldReduceMotion, stageSixRun]);
 
   const getPartState = (part: RocketPart) => {
     const anchor = rocketAnchors[part];
     const partFrame = partFrames[part];
     const isActive = activeFrame === partFrame;
     const isIntroduced = activeFrame > partFrame;
-    const isVerification = activeFrame === 5;
+    const isVerification = activeFrame === FINAL_STAGE_FRAME;
+    const anchorScale = anchor.anchorScale;
     const atAnchor = {
       left: `${anchor.x}%`,
       top: `${anchor.y}%`,
@@ -529,7 +687,8 @@ function ExplodedRocketVisual({
       return {
         ...atAnchor,
         opacity: 0,
-        scale: 0.8,
+        scale: anchorScale * 0.8,
+        rotate: anchor.rotate,
         filter: "brightness(0.5)",
       };
     }
@@ -544,8 +703,15 @@ function ExplodedRocketVisual({
         left: [`${anchor.x}%`, `${extractionPoint.x}%`, `${focusTargets[part].x}%`],
         top: [`${anchor.y}%`, `${extractionPoint.y}%`, `${focusTargets[part].y}%`],
         opacity: 1,
-        scale: focusTargets[part].scale,
-        filter: "brightness(1.1)",
+        scale:
+          part === "avionics"
+            ? [anchorScale, anchorScale * 1.15, focusTargets[part].scale]
+            : focusTargets[part].scale,
+        rotate:
+          part === "avionics"
+            ? [anchor.rotate, 8, focusTargets[part].rotate]
+            : focusTargets[part].rotate,
+        filter: part === "avionics" ? "none" : "brightness(1.1)",
       };
     }
 
@@ -553,8 +719,9 @@ function ExplodedRocketVisual({
       return {
         ...atAnchor,
         opacity: 0.42,
-        scale: 0.9,
-        filter: "brightness(0.62)",
+        scale: anchorScale * 0.9,
+        rotate: anchor.rotate,
+        filter: part === "avionics" ? "none" : "brightness(0.62)",
       };
     }
 
@@ -563,15 +730,17 @@ function ExplodedRocketVisual({
         left: `${anchor.x + retainedOffsets[part].x}%`,
         top: `${anchor.y + retainedOffsets[part].y}%`,
         opacity: part === "nose" ? 0.22 : 0.26,
-        scale: 0.86,
-        filter: "brightness(0.52)",
+        scale: anchorScale * 0.86,
+        rotate: anchor.rotate,
+        filter: part === "avionics" ? "none" : "brightness(0.52)",
       };
     }
 
     return {
       ...atAnchor,
       opacity: 0,
-      scale: 0.8,
+      scale: anchorScale * 0.8,
+      rotate: anchor.rotate,
       filter: "brightness(0.5)",
     };
   };
@@ -579,7 +748,7 @@ function ExplodedRocketVisual({
   const fullRocketState =
     activeFrame === 0
       ? { opacity: 1, scale: 1, filter: "brightness(1)" }
-      : activeFrame === 5
+      : activeFrame === FINAL_STAGE_FRAME
         ? { opacity: 0.2, scale: 0.94, filter: "brightness(0.58)" }
         : { opacity: 0.2, scale: 0.94, filter: "brightness(0.52)" };
 
@@ -603,6 +772,12 @@ function ExplodedRocketVisual({
       src: "/images/rocket-structure/payload-module.png",
       alt: "以碳纖維板與鋁圓棒製作的多層模組化酬載段",
       label: "模組化酬載段",
+    },
+    {
+      key: "avionics" as const,
+      src: "/images/avionics/avionics-module.png",
+      alt: "Arduino Mega、感測器、LoRa 通訊與電池組組成的航電模組",
+      label: "航電系統",
     },
     {
       key: "fin" as const,
@@ -674,7 +849,9 @@ function ExplodedRocketVisual({
         <motion.div
           data-axis-guide
           aria-hidden="true"
-          animate={{ opacity: activeFrame === 0 ? 0 : activeFrame === 5 ? 0.22 : 0.7 }}
+          animate={{
+            opacity: activeFrame === 0 ? 0 : activeFrame === FINAL_STAGE_FRAME ? 0.22 : 0.7,
+          }}
           transition={{ duration: 0.35 }}
           className="absolute left-[4%] right-[4%] top-1/2 h-px bg-gradient-to-r from-transparent via-orange-300/45 to-transparent"
         />
@@ -710,14 +887,56 @@ function ExplodedRocketVisual({
               }}
             >
               <motion.div
-                data-part-visual
+                data-part-visual={part.key}
                 initial={false}
-                animate={{ opacity: state.opacity, scale: state.scale, filter: state.filter }}
-                transition={partTransition}
-                style={{ rotate: anchor.rotate }}
-                className="relative h-full w-full will-change-transform"
+                animate={
+                  part.key === "avionics"
+                    ? {
+                        opacity: state.opacity,
+                        scale: state.scale,
+                        rotate: state.rotate,
+                      }
+                    : {
+                        opacity: state.opacity,
+                        scale: state.scale,
+                        rotate: state.rotate,
+                        filter: state.filter,
+                      }
+                }
+                transition={
+                  part.key === "avionics" && isActive
+                    ? {
+                        ...partTransition,
+                        scale: {
+                          duration: 0.76,
+                          times: [0, 0.3, 1],
+                          ease: ["easeOut", "easeInOut"],
+                        },
+                        rotate: {
+                          duration: 0.76,
+                          times: [0, 0.35, 1],
+                          ease: ["easeOut", "easeInOut"],
+                        },
+                      }
+                    : partTransition
+                }
+                className={`relative h-full w-full ${
+                  part.key === "avionics" ? "" : "will-change-transform"
+                }`}
               >
-                <PartImage src={part.src} alt={part.alt} label={part.label} />
+                <PartImage
+                  src={part.src}
+                  alt={part.alt}
+                  label={part.label}
+                  sizes={
+                    part.key === "avionics"
+                      ? "(min-width: 1536px) 550px, (min-width: 1280px) 480px, (min-width: 1024px) 42vw, 90vw"
+                      : undefined
+                  }
+                  unoptimized={part.key === "avionics"}
+                  highDetail={part.key === "avionics"}
+                />
+                {part.key === "avionics" ? <AvionicsLabels active={isActive} /> : null}
               </motion.div>
             </motion.div>
           );
@@ -792,6 +1011,11 @@ function StaticStages() {
               unoptimized={stage.stage === "STAGE 03"}
               className={stage.stage === "STAGE 03" ? "object-contain p-2 sm:p-4" : undefined}
             />
+            {stage.stage === "STAGE 04" ? (
+              <div className="pointer-events-none absolute inset-y-5 left-1/2 aspect-[1247/1261] -translate-x-1/2 sm:inset-y-8">
+                <AvionicsLabels />
+              </div>
+            ) : null}
           </figure>
           <div className="p-6 sm:p-9">
             <StageDetails stage={stage} />
@@ -807,7 +1031,7 @@ export default function RocketStructureSection() {
   const activeFrameRef = useRef(0);
   const shouldReduceMotion = useReducedMotion();
   const [activeFrame, setActiveFrame] = useState(0);
-  const [stageFiveRun, setStageFiveRun] = useState(0);
+  const [stageSixRun, setStageSixRun] = useState(0);
   const { scrollYProgress } = useScroll({
     target: scrollSectionRef,
     offset: ["start start", "end end"],
@@ -815,21 +1039,13 @@ export default function RocketStructureSection() {
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (shouldReduceMotion) return;
-    const nextFrame =
-      latest < 0.15
-        ? 0
-        : latest < 0.32
-          ? 1
-          : latest < 0.49
-            ? 2
-            : latest < 0.66
-              ? 3
-              : latest < 0.83
-                ? 4
-                : 5;
+    const nextFrame = Math.min(
+      Math.floor(latest * (structureStages.length + 1)),
+      FINAL_STAGE_FRAME,
+    );
 
     if (activeFrameRef.current === nextFrame) return;
-    if (nextFrame === 5) setStageFiveRun((current) => current + 1);
+    if (nextFrame === FINAL_STAGE_FRAME) setStageSixRun((current) => current + 1);
     activeFrameRef.current = nextFrame;
     setActiveFrame(nextFrame);
   });
@@ -905,7 +1121,7 @@ export default function RocketStructureSection() {
 
       <div
         ref={scrollSectionRef}
-        className={shouldReduceMotion ? "hidden" : "relative hidden h-[360vh] lg:block"}
+        className={shouldReduceMotion ? "hidden" : "relative hidden h-[420vh] lg:block"}
       >
         <div className="sticky top-0 h-screen overflow-hidden border-y border-white/10 bg-[#050b14] px-7 py-7 xl:px-12">
           <div aria-hidden="true" className="hero-grid absolute inset-0 opacity-45" />
@@ -941,7 +1157,7 @@ export default function RocketStructureSection() {
             <div className="relative aspect-[16/11] max-h-[72vh] w-full overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950 shadow-[0_0_60px_rgba(249,115,22,0.08)]">
               <ExplodedRocketVisual
                 activeFrame={activeFrame}
-                stageFiveRun={stageFiveRun}
+                stageSixRun={stageSixRun}
                 shouldReduceMotion={Boolean(shouldReduceMotion)}
               />
             </div>

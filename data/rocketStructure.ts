@@ -8,9 +8,16 @@ export type StructureStage = {
   stage: string;
   title: string;
   eyebrow?: string;
+  subtitle?: string;
   introduction?: string;
   conclusion?: string;
   points: StructurePoint[];
+  specifications?: {
+    label: string;
+    value?: string;
+    details: string[];
+  }[];
+  mainSystems?: StructurePoint[];
   image: string;
   imageAlt: string;
 };
@@ -108,7 +115,41 @@ export const structureStages: StructureStage[] = [
   },
   {
     stage: "STAGE 04",
-    title: "04 尾翼與推進器固定",
+    eyebrow: "AVIONICS SYSTEM",
+    title: "航電系統",
+    subtitle: "記錄每一次升空",
+    introduction:
+      "即時記錄火箭飛行中的高度、氣壓、溫度與姿態資料，並透過 LoRa 將飛行資訊回傳至地面站。",
+    image: "/images/avionics/avionics-module.png",
+    imageAlt: "航電模組實體照片，包含 Arduino Mega、感測器、LoRa 通訊與電池組",
+    points: [],
+    specifications: [
+      {
+        label: "FLIGHT DATA",
+        details: ["高度 / 氣壓 / 溫度 / 六軸姿態"],
+      },
+      {
+        label: "POWER",
+        value: "1.5+ HR",
+        details: ["小時續航", "過載保護"],
+      },
+      {
+        label: "SYSTEM",
+        value: "370 g",
+        details: ["防水・防震・耐極端環境", "實際重量"],
+      },
+    ],
+    mainSystems: [
+      { title: "主控", description: "Arduino Mega 2560" },
+      { title: "IMU", description: "MPU6050" },
+      { title: "GPS", description: "GPS Module" },
+      { title: "氣壓計", description: "BMP180" },
+      { title: "資料儲存", description: "MicroSD Card Adapter" },
+    ],
+  },
+  {
+    stage: "STAGE 05",
+    title: "05 尾翼與推進器固定",
     image: "/images/rocket-structure/fin-module.png",
     imageAlt: "火箭碳纖維尾翼、鋁製固定環與推進器固定結構",
     points: [
@@ -139,8 +180,8 @@ export const structureStages: StructureStage[] = [
     ],
   },
   {
-    stage: "STAGE 05",
-    eyebrow: "STAGE 05 / STRUCTURAL VERIFICATION",
+    stage: "STAGE 06",
+    eyebrow: "STAGE 06 / STRUCTURAL VERIFICATION",
     title: "我們怎麼確認它撐得住？",
     introduction:
       "我們不只設計，也驗證。火箭在圖面上看起來合理，不代表它真的能承受飛行環境；因此我們會透過實體測試與工程分析，確認結構面對約 9G、0.9 Ma、衝擊與震動時的表現。",
