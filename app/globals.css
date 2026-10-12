@@ -13,6 +13,7 @@
 html {
   background: var(--background);
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {

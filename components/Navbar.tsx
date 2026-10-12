@@ -1,24 +1,27 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { officialDonationUrl } from "@/data/siteContent";
+
 const navigation = [
-  { id: "home", label: "首頁", href: "#home" },
-  { id: "competition", label: "賽事簡介", href: "#competition" },
-  { id: "about", label: "關於我們", href: "#about" },
-  { id: "history-2026", label: "2026 經歷", href: "#history-2026" },
-  { id: "budget", label: "經費總結", href: "#budget" },
-  { id: "plan-2027", label: "2027 計畫", href: "#plan-2027" },
+  { label: "首頁", href: "/" },
+  { label: "賽事簡介", href: "/competition" },
+  { label: "關於我們", href: "/about" },
+  { label: "2026 經歷", href: "/journey-2026" },
+  { label: "經費總結", href: "/budget" },
+  { label: "2027 計畫", href: "/plan-2027" },
 ];
 
-const supportItem = { id: "support", label: "支持我們", href: "#support" };
-const sectionIds = [...navigation.map((item) => item.id), supportItem.id];
+const supportItem = { label: "支持我們", href: officialDonationUrl };
 
 export default function Navbar() {
   const headerRef = useRef<HTMLElement>(null);
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
     const updateNavbar = () => setIsScrolled(window.scrollY > 8);
@@ -29,57 +32,11 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", updateNavbar);
   }, []);
 
-  useEffect(() => {
-    const header = headerRef.current;
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((section): section is HTMLElement => section !== null);
-
-    if (!header || sections.length === 0) return;
-
-    let animationFrame: number | null = null;
-
-    const updateActiveSection = () => {
-      animationFrame = null;
-      const navbarHeight = Math.ceil(header.getBoundingClientRect().height);
-      const readingLine =
-        navbarHeight + (window.innerHeight - navbarHeight) * 0.25;
-      let currentSection = sections[0];
-
-      for (const section of sections) {
-        if (section.getBoundingClientRect().top > readingLine) break;
-        currentSection = section;
-      }
-
-      setActiveSection((current) =>
-        current === currentSection.id ? current : currentSection.id,
-      );
-    };
-
-    const scheduleUpdate = () => {
-      if (animationFrame !== null) return;
-      animationFrame = window.requestAnimationFrame(updateActiveSection);
-    };
-
-    updateActiveSection();
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
-
-    const resizeObserver = new ResizeObserver(scheduleUpdate);
-    resizeObserver.observe(header);
-
-    return () => {
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
-      resizeObserver.disconnect();
-      if (animationFrame !== null) window.cancelAnimationFrame(animationFrame);
-    };
-  }, []);
-
-  const handleNavigation = (sectionId: string) => {
-    setActiveSection(sectionId);
+  const handleNavigation = () => {
     setIsMenuOpen(false);
   };
+
+  const isActive = (href: string) => pathname === href;
 
   return (
     <header
@@ -91,9 +48,9 @@ export default function Navbar() {
       }`}
     >
       <div className="relative mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
-        <a
-          href="#home"
-          onClick={() => handleNavigation("home")}
+        <Link
+          href="/"
+          onClick={handleNavigation}
           className="flex w-fit items-center gap-3 text-lg font-black tracking-tight text-white"
         >
           <span
@@ -103,18 +60,18 @@ export default function Navbar() {
             ▲
           </span>
           火大的元件
-        </a>
+        </Link>
 
         <nav aria-label="主要導覽" className="hidden lg:block">
           <div className="flex items-center gap-1">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
-                aria-current={activeSection === item.id ? "location" : undefined}
-                onClick={() => handleNavigation(item.id)}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                onClick={handleNavigation}
                 className={`group relative rounded-full px-2.5 py-2 text-sm font-medium transition-all duration-300 hover:text-orange-300 xl:px-3.5 ${
-                  activeSection === item.id
+                  isActive(item.href)
                     ? "text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.32)]"
                     : "text-slate-300"
                 }`}
@@ -123,20 +80,17 @@ export default function Navbar() {
                 <span
                   aria-hidden="true"
                   className={`absolute inset-x-3 bottom-0 h-px origin-center bg-orange-400 transition-transform duration-300 group-hover:scale-x-100 ${
-                    activeSection === item.id ? "scale-x-100" : "scale-x-0"
+                    isActive(item.href) ? "scale-x-100" : "scale-x-0"
                   }`}
                 />
-              </a>
+              </Link>
             ))}
             <a
               href={supportItem.href}
-              aria-current={activeSection === supportItem.id ? "location" : undefined}
-              onClick={() => handleNavigation(supportItem.id)}
-              className={`ml-1 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-bold text-white transition-all duration-300 hover:bg-orange-400 ${
-                activeSection === supportItem.id
-                  ? "shadow-[0_0_34px_rgba(251,146,60,0.5)] ring-1 ring-orange-200/50"
-                  : "shadow-[0_0_28px_rgba(249,115,22,0.28)]"
-              }`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleNavigation}
+              className="ml-1 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_28px_rgba(249,115,22,0.28)] transition-all duration-300 hover:bg-orange-400"
             >
               {supportItem.label}
             </a>
@@ -181,29 +135,26 @@ export default function Navbar() {
         >
           <div className="grid gap-1">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
-                aria-current={activeSection === item.id ? "location" : undefined}
-                onClick={() => handleNavigation(item.id)}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                onClick={handleNavigation}
                 className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition-all duration-300 hover:bg-orange-500/10 hover:text-orange-300 ${
-                  activeSection === item.id
+                  isActive(item.href)
                     ? "border-orange-400/20 bg-orange-500/10 text-orange-300"
                     : "border-transparent text-slate-200"
                 }`}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
             <a
               href={supportItem.href}
-              aria-current={activeSection === supportItem.id ? "location" : undefined}
-              onClick={() => handleNavigation(supportItem.id)}
-              className={`mt-1 rounded-2xl bg-orange-500 px-4 py-3 text-center text-sm font-bold text-white transition-all duration-300 hover:bg-orange-400 ${
-                activeSection === supportItem.id
-                  ? "shadow-[0_0_34px_rgba(251,146,60,0.48)] ring-1 ring-orange-200/50"
-                  : "shadow-[0_0_28px_rgba(249,115,22,0.24)]"
-              }`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleNavigation}
+              className="mt-1 rounded-2xl bg-orange-500 px-4 py-3 text-center text-sm font-bold text-white shadow-[0_0_28px_rgba(249,115,22,0.24)] transition-all duration-300 hover:bg-orange-400"
             >
               {supportItem.label}
             </a>
