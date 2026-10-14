@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-import { officialDonationUrl } from "@/data/siteContent";
+import SupportMenu from "@/components/SupportMenu";
 
 const navigation = [
   { label: "首頁", href: "/" },
@@ -15,10 +15,9 @@ const navigation = [
   { label: "2027 計畫", href: "/plan-2027" },
 ];
 
-const supportItem = { label: "支持我們", href: officialDonationUrl };
-
 export default function Navbar() {
   const headerRef = useRef<HTMLElement>(null);
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,6 +30,28 @@ export default function Navbar() {
 
     return () => window.removeEventListener("scroll", updateNavbar);
   }, []);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const closeOutside = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) setIsMenuOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented || document.querySelector("dialog[open]")) return;
+      setIsMenuOpen(false);
+      mobileToggleRef.current?.focus();
+    };
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const closeOnDesktop = () => { if (desktop.matches) setIsMenuOpen(false); };
+    document.addEventListener("pointerdown", closeOutside);
+    document.addEventListener("keydown", closeOnEscape);
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => {
+      document.removeEventListener("pointerdown", closeOutside);
+      document.removeEventListener("keydown", closeOnEscape);
+      desktop.removeEventListener("change", closeOnDesktop);
+    };
+  }, [isMenuOpen]);
 
   const handleNavigation = () => {
     setIsMenuOpen(false);
@@ -85,19 +106,12 @@ export default function Navbar() {
                 />
               </Link>
             ))}
-            <a
-              href={supportItem.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleNavigation}
-              className="ml-1 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_28px_rgba(249,115,22,0.28)] transition-all duration-300 hover:bg-orange-400"
-            >
-              {supportItem.label}
-            </a>
+            <SupportMenu />
           </div>
         </nav>
 
         <button
+          ref={mobileToggleRef}
           type="button"
           aria-expanded={isMenuOpen}
           aria-controls="mobile-navigation"
@@ -127,7 +141,7 @@ export default function Navbar() {
         <nav
           id="mobile-navigation"
           aria-label="行動版主要導覽"
-          className={`absolute inset-x-5 top-[calc(100%+0.5rem)] overflow-hidden rounded-3xl border border-white/10 bg-[#050816]/95 p-3 shadow-[0_18px_48px_rgba(2,6,23,0.65)] backdrop-blur-xl transition-all duration-300 sm:inset-x-8 lg:hidden ${
+          className={`absolute inset-x-5 top-[calc(100%+0.5rem)] max-h-[calc(100dvh-6rem)] overflow-y-auto overscroll-contain rounded-3xl border border-white/10 bg-[#050816]/95 p-3 shadow-[0_18px_48px_rgba(2,6,23,0.65)] backdrop-blur-xl transition-all duration-300 sm:inset-x-8 lg:hidden ${
             isMenuOpen
               ? "visible translate-y-0 opacity-100"
               : "invisible -translate-y-2 pointer-events-none opacity-0"
@@ -149,15 +163,7 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
-            <a
-              href={supportItem.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleNavigation}
-              className="mt-1 rounded-2xl bg-orange-500 px-4 py-3 text-center text-sm font-bold text-white shadow-[0_0_28px_rgba(249,115,22,0.24)] transition-all duration-300 hover:bg-orange-400"
-            >
-              {supportItem.label}
-            </a>
+            <SupportMenu key={isMenuOpen ? "open" : "closed"} mobile />
           </div>
         </nav>
       </div>
