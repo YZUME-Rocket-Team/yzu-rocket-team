@@ -18,6 +18,8 @@ export default function Journey2026Page() {
         description="2026 年，我們第一次完整走過一枚學生火箭從設計、製作、測試到實際發射的流程。"
       />
 
+      <RocketModelSection />
+
       <section className="px-5 py-20 sm:px-8 sm:py-24 lg:px-12 lg:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
@@ -54,9 +56,7 @@ export default function Journey2026Page() {
         </div>
       </section>
 
-      <RocketModelSection />
-
-      <RocketStructureSection />
+      <RocketStructureSection detailsOnly />
 
       <section className="border-t border-white/10 bg-slate-950/55 px-5 py-20 sm:px-8 sm:py-24 lg:px-12 lg:py-28">
         <div className="mx-auto max-w-7xl">

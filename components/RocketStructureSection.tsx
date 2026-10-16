@@ -1026,7 +1026,7 @@ function StaticStages() {
   );
 }
 
-export default function RocketStructureSection() {
+function AnimatedRocketStructureSection() {
   const scrollSectionRef = useRef<HTMLDivElement>(null);
   const activeFrameRef = useRef(0);
   const shouldReduceMotion = useReducedMotion();
@@ -1194,6 +1194,34 @@ export default function RocketStructureSection() {
             </div>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/** Detailed reference after the GLB story; all original copy and images are retained. */
+export default function RocketStructureSection({ detailsOnly = false }: { detailsOnly?: boolean }) {
+  if (!detailsOnly) return <AnimatedRocketStructureSection />;
+  return (
+    <section id="rocket-structure" className="relative scroll-mt-24 border-t border-white/10 bg-slate-950/65 px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+          <div>
+            <p className="mb-5 font-mono text-sm font-semibold tracking-[0.2em] text-orange-400 uppercase">Rocket Structure / Engineering Notes</p>
+            <h2 className="text-balance text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">一枚火箭，是怎麼組成的？</h2>
+          </div>
+          <div className="space-y-5 self-end text-base leading-8 text-slate-300 sm:text-lg sm:leading-9">
+            <p>火箭不是一根單純的管子，而是一套必須同時承受高速、加速度、震動與發射環境的整合系統。</p>
+            <p>我們的結構設計以最高約 Mach 0.9、最大約 9G 的飛行條件為設計考量，同時兼顧抗衝擊、抗震動、重量與結構可靠度。</p>
+          </div>
+        </div>
+        <dl className="mt-12 grid gap-3 md:grid-cols-[0.72fr_0.72fr_1.56fr]">
+          {structureStats.map((stat) => <div key={stat.label} className="border-t border-white/15 py-6">
+            <dt className="font-mono text-xs tracking-[0.16em] text-orange-400">{stat.label}</dt>
+            <dd className={`mt-4 font-black text-white ${stat.label === "DESIGN FOCUS" ? "text-xl leading-8" : "text-4xl"}`}>{stat.value}</dd>
+          </div>)}
+        </dl>
+        <StaticStages />
       </div>
     </section>
   );

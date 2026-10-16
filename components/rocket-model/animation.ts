@@ -1,13 +1,22 @@
 import { AnimationMixer, type AnimationClip, type Object3D } from "three";
+import { storyFrame } from "./story";
 
 /** Rocket_Web.glb: eight translation clips, Blender frames 1–288 at 24 FPS. */
 export function createRocketAnimation(root: Object3D, clips: AnimationClip[]) {
-  if (!clips.length || !clips.some((clip) => clip.tracks.length)) {
+  if (!clips.length || clips.some((clip) => !clip.tracks.length)) {
     throw new Error("模型未包含可用的結構動畫。");
   }
 
-  const start = Math.min(...clips.flatMap((clip) => clip.tracks.map((track) => track.times[0])));
-  const end = Math.max(...clips.map((clip) => clip.duration));
+  const ranges = clips.map((clip) => {
+    const start = Math.min(...clip.tracks.map((track) => track.times[0]));
+    const end = Math.max(...clip.tracks.map((track) => track.times[track.times.length - 1]));
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) {
+      throw new Error("模型動畫時間軸無法判讀。");
+    }
+    return { name: clip.name, start, end };
+  });
+  const start = Math.min(...ranges.map((range) => range.start));
+  const end = Math.max(...ranges.map((range) => range.end));
   const mixer = new AnimationMixer(root);
   const actions = clips.map((clip) => {
     const action = mixer.clipAction(clip).play();
@@ -17,9 +26,11 @@ export function createRocketAnimation(root: Object3D, clips: AnimationClip[]) {
   });
 
   function setTime(time: number) {
-    for (const action of actions) {
-      action.time = Math.min(Math.max(time, start), action.getClip().duration);
-    }
+    actions.forEach((action, index) => {
+      const range = ranges[index];
+      // Use scene seconds, including each clip's exported offset. Never per-clip %.
+      action.time = Math.min(range.end, Math.max(range.start, time));
+    });
     mixer.update(0);
     root.updateMatrixWorld(true);
   }
@@ -27,18 +38,10 @@ export function createRocketAnimation(root: Object3D, clips: AnimationClip[]) {
   return {
     start,
     end,
+    ranges,
     setTime,
     seek(progress: number) {
-      const p = Math.min(1, Math.max(0, progress));
-      // Leave room to read the assembled pose and inspect the fully exploded pose.
-      // Six seconds is the fully exploded pose in this GLB, before reassembly.
-      const exploded = Math.min(6, end);
-      const time = p <= 0.08 ? start
-        : p < 0.46 ? start + ((p - 0.08) / 0.38) * (exploded - start)
-        : p <= 0.62 ? exploded
-        : p < 0.94 ? exploded + ((p - 0.62) / 0.32) * (end - exploded)
-        : end;
-      setTime(time);
+      setTime(storyFrame(progress, start, end).time);
     },
     dispose() {
       mixer.stopAllAction();
