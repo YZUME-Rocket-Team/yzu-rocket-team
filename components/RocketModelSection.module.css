@@ -1,0 +1,61 @@
+.track {
+  height: 360svh;
+}
+
+.panel {
+  position: sticky;
+  top: 5rem;
+  display: flex;
+  height: calc(100svh - 6rem);
+  max-height: 54rem;
+  min-height: 12rem;
+  flex-direction: column;
+}
+
+.staticHint {
+  display: none;
+}
+
+.track[data-status="error"],
+.track[data-status="unsupported"] {
+  height: auto;
+}
+
+.track[data-status="error"] .panel,
+.track[data-status="unsupported"] .panel {
+  position: relative;
+  top: auto;
+  height: min(36rem, 75svh);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    height: auto;
+  }
+
+  .panel {
+    position: relative;
+    top: auto;
+    height: min(42rem, 85svh);
+  }
+
+  .scrollHint {
+    display: none;
+  }
+
+  .staticHint {
+    display: inline;
+  }
+}
+
+@media (max-height: 480px) {
+  .panel {
+    top: 4.5rem;
+    height: calc(100svh - 5rem);
+    min-height: 0;
+  }
+
+  .hint {
+    display: none;
+  }
+}

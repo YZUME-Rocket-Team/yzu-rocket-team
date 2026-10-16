@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import PageHeader from "@/components/PageHeader";
 import PageLinks from "@/components/PageLinks";
+import RocketModelSection from "@/components/RocketModelSection";
 import RocketStructureSection from "@/components/RocketStructureSection";
 import { engineeringImages, officialDonationUrl } from "@/data/siteContent";
 
@@ -52,6 +53,8 @@ export default function Journey2026Page() {
           </div>
         </div>
       </section>
+
+      <RocketModelSection />
 
       <RocketStructureSection />
 
