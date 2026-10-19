@@ -5,7 +5,7 @@ import PageHeader from "@/components/PageHeader";
 import PageLinks from "@/components/PageLinks";
 import RocketModelSection from "@/components/RocketModelSection";
 import RocketStructureSection from "@/components/RocketStructureSection";
-import { engineeringImages, officialDonationUrl } from "@/data/siteContent";
+import { engineeringImages } from "@/data/siteContent";
 
 export const metadata: Metadata = { title: "2026 經歷｜火大的元件" };
 
@@ -17,8 +17,6 @@ export default function Journey2026Page() {
         title="我們已經踏出第一步"
         description="2026 年，我們第一次完整走過一枚學生火箭從設計、製作、測試到實際發射的流程。"
       />
-
-      <RocketModelSection />
 
       <section className="px-5 py-20 sm:px-8 sm:py-24 lg:px-12 lg:py-28">
         <div className="mx-auto max-w-7xl">
@@ -56,7 +54,9 @@ export default function Journey2026Page() {
         </div>
       </section>
 
-      <RocketStructureSection detailsOnly />
+      <RocketModelSection />
+
+      <RocketStructureSection />
 
       <section className="border-t border-white/10 bg-slate-950/55 px-5 py-20 sm:px-8 sm:py-24 lg:px-12 lg:py-28">
         <div className="mx-auto max-w-7xl">
@@ -104,14 +104,7 @@ export default function Journey2026Page() {
         </div>
       </section>
 
-      <PageLinks
-        title="從 2026 的經驗繼續往前"
-        links={[
-          { href: "/plan-2027", label: "2027 計畫", description: "看團隊準備改進哪些系統與測試流程。" },
-          { href: "/budget", label: "經費總結", description: "了解完成製作與參賽的實際成本。" },
-          { href: officialDonationUrl, label: "支持我們", description: "透過元智大學官方系統支持下一次升空。" },
-        ]}
-      />
+      <PageLinks />
     </main>
   );
 }

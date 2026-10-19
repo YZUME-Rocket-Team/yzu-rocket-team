@@ -1,14 +1,12 @@
 import {
-  ACESFilmicToneMapping, Box3, DirectionalLight, Group,
-  HemisphereLight, Mesh, PerspectiveCamera, PMREMGenerator, Scene, SRGBColorSpace,
+  ACESFilmicToneMapping, Box3, Color, DirectionalLight, Group,
+  HemisphereLight, Mesh, OrthographicCamera, PMREMGenerator, Scene, SRGBColorSpace,
   Texture, Vector3, WebGLRenderer, type Material, type Object3D, type WebGLRenderTarget,
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
 import { createRocketAnimation } from "./animation";
-import { createCameraDirector, type StoryProjection } from "./director";
-import { storyFrame } from "./story";
 
 export type RocketViewer = {
   seek: (progress: number) => void;
@@ -42,12 +40,11 @@ export async function createRocketViewer(
   modelUrl: string,
   signal: AbortSignal,
   onContextLost: () => void,
-  onFrame: (projection: StoryProjection) => void,
 ): Promise<RocketViewer> {
   const canvas = document.createElement("canvas");
   let renderer: WebGLRenderer;
   try {
-    renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "low-power" });
+    renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "low-power" });
   } catch {
     const error = new Error("此瀏覽器或裝置目前無法使用 WebGL 2。");
     error.name = "WebGLUnavailableError";
@@ -58,18 +55,16 @@ export async function createRocketViewer(
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.toneMapping = ACESFilmicToneMapping;
   const scene = new Scene();
-  scene.add(new HemisphereLight(0xdbeafe, 0x111827, 1.4));
-  const key = new DirectionalLight(0xf1f5ff, 3);
-  key.position.set(-3, 4, 5);
-  const rim = new DirectionalLight(0xffa45b, 4);
-  rim.position.set(3, 2, -4);
+  scene.background = new Color("#050b14");
+  scene.add(new HemisphereLight(0xdbeafe, 0x263044, 2.5));
+  const key = new DirectionalLight(0xffffff, 3.5);
+  key.position.set(4, 3, 5);
+  const rim = new DirectionalLight(0xfdba74, 2);
+  rim.position.set(-4, 1, -2);
   scene.add(key, rim);
-  const camera = new PerspectiveCamera(30, 1, 0.01, 100);
-  const director = createCameraDirector(camera);
-  const flight = new Group();
+  const camera = new OrthographicCamera(-1, 1, 1, -1, 0.01, 100);
   const centered = new Group();
-  scene.add(flight);
-  flight.add(centered);
+  scene.add(centered);
   let roots: Object3D[] = [];
   let animation: ReturnType<typeof createRocketAnimation> | undefined;
   let environmentMap: WebGLRenderTarget | undefined;
@@ -127,45 +122,50 @@ export async function createRocketViewer(
     centered.add(oriented);
     animation.setTime(animation.start);
     const assembled = new Box3().setFromObject(oriented);
-    const assembledHeight = assembled.getSize(new Vector3()).y;
     centered.position.copy(assembled.getCenter(new Vector3())).negate();
-    const bounds = new Box3();
-    const anchors: Record<string, Vector3> = {};
-    const groupBounds = new Box3();
-    const tail = new Vector3();
-    let progress = 0;
 
-    function render() {
-      if (disposed) return;
-      const frame = storyFrame(progress, animation!.start, animation!.end);
-      animation!.setTime(frame.time);
-      // Fit the pre-flight pose; translating the wrapper must not drag the camera upward.
-      flight.position.y = 0;
-      scene.updateMatrixWorld(true);
-      bounds.setFromObject(centered);
-      for (const node of gltf.scene.children) {
-        anchors[node.name] ??= new Vector3();
-        groupBounds.setFromObject(node).getCenter(anchors[node.name]);
+    // Measure the entire exported timeline, not only the assembled rocket.
+    // Linear translation extrema occur at track keys; also include every exact key.
+    const bounds = new Box3();
+    const sampleTimes = new Set<number>([animation.start, animation.end]);
+    for (const clip of gltf.animations) for (const track of clip.tracks) {
+      for (const time of track.times) sampleTimes.add(time);
+    }
+    for (const time of sampleTimes) {
+      animation.setTime(time);
+      bounds.union(new Box3().setFromObject(centered));
+    }
+    animation.seek(0);
+    const distance = Math.max(1, bounds.getSize(new Vector3()).length() * 2);
+    camera.position.set(distance * 0.55, 0, distance);
+    camera.far = distance * 4;
+    camera.lookAt(0, 0, 0);
+    camera.updateMatrixWorld(true);
+    let halfWidth = 0;
+    let halfHeight = 0;
+    for (const x of [bounds.min.x, bounds.max.x]) {
+      for (const y of [bounds.min.y, bounds.max.y]) {
+        for (const z of [bounds.min.z, bounds.max.z]) {
+          const corner = new Vector3(x, y, z).applyMatrix4(camera.matrixWorldInverse);
+          halfWidth = Math.max(halfWidth, Math.abs(corner.x));
+          halfHeight = Math.max(halfHeight, Math.abs(corner.y));
+        }
       }
-      director.frame(progress, bounds, anchors);
-      tail.set((bounds.min.x + bounds.max.x) / 2, bounds.min.y, (bounds.min.z + bounds.max.z) / 2);
-      flight.position.y = assembledHeight * 3.5 * frame.launch;
-      tail.y += flight.position.y;
-      rim.intensity = 4 + frame.glow * 2;
-      scene.updateMatrixWorld(true);
-      renderer.render(scene, camera);
-      onFrame(director.project(progress, anchors, tail));
     }
 
     function resize() {
       if (disposed) return;
       const width = Math.max(1, host.clientWidth);
       const height = Math.max(1, host.clientHeight);
-      const compact = window.matchMedia("(max-width: 767px)").matches;
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, compact ? 1.25 : 1.5));
-      director.resize(width, height, compact);
+      const aspect = width / height;
+      const vertical = Math.max(halfHeight, halfWidth / aspect) * 1.16;
+      camera.left = -vertical * aspect;
+      camera.right = vertical * aspect;
+      camera.top = vertical;
+      camera.bottom = -vertical;
+      camera.updateProjectionMatrix();
       renderer.setSize(width, height, false);
-      render();
+      renderer.render(scene, camera);
     }
 
     canvas.setAttribute("aria-hidden", "true");
@@ -173,15 +173,14 @@ export async function createRocketViewer(
     host.appendChild(canvas);
     resize();
     return {
-      seek(nextProgress) {
+      seek(progress) {
         if (disposed) return;
-        progress = Math.max(0, Math.min(1, nextProgress));
-        render();
+        animation!.seek(progress);
+        renderer.render(scene, camera);
       },
       resize,
       dispose,
     };
-
   } catch (error) {
     dispose();
     throw error;

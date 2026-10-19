@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import PageHeader from "@/components/PageHeader";
 import PageLinks from "@/components/PageLinks";
-import { expenseBreakdown, fundingExpenses, fundingIncome, officialDonationUrl } from "@/data/siteContent";
+import { expenseBreakdown, fundingExpenses, fundingIncome } from "@/data/siteContent";
 
 export const metadata: Metadata = { title: "經費總結｜火大的元件" };
 
@@ -64,10 +64,7 @@ export default function BudgetPage() {
           </div>
         </div>
       </section>
-      <PageLinks title="把資源變成下一次升空" links={[
-        { href: "/plan-2027", label: "2027 計畫與預算", description: "查看團隊的改進目標與建議預算。" },
-        { href: officialDonationUrl, label: "支持我們", description: "前往元智大學官方募款系統。" },
-      ]} />
+      <PageLinks />
     </main>
   );
 }

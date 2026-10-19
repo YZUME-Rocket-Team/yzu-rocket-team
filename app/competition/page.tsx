@@ -1,25 +1,93 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
-import PageHeader from "@/components/PageHeader";
 import PageLinks from "@/components/PageLinks";
 import { competitionFacts } from "@/data/siteContent";
+import competitionHeroImage from "@/public/images/competition/rtc-2027-hero-bg.png";
 
 export const metadata: Metadata = { title: "賽事簡介｜火大的元件" };
 
 export default function CompetitionPage() {
   return (
     <main className="min-h-screen overflow-x-clip">
-      <PageHeader
-        eyebrow="About the Competition"
-        title="2027 台灣盃火箭競賽"
-        description={
-          <>
-            2027 台灣盃火箭競賽（Rocket Taiwan Cup 2027）是由
-            <strong className="font-bold text-white">國家太空中心（TASA）與屏東縣政府共同舉辦</strong>
-            的第三屆台灣盃火箭競賽，旨在推廣火箭科技教育、培育太空工程人才，並提供參賽團隊從設計、製作、測試到實際發射的完整科研火箭實作經驗。
-          </>
-        }
-      />
+      <section
+        aria-labelledby="competition-title"
+        className="relative px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12"
+      >
+        <div aria-hidden="true" className="hero-grid absolute inset-0 opacity-30" />
+        <div className="relative mx-auto max-w-[96rem] overflow-hidden rounded-[1.75rem] border border-sky-400/35 bg-[#061120] shadow-[0_0_0_1px_rgba(56,189,248,0.08),0_28px_80px_rgba(2,8,23,0.48)] sm:rounded-[2rem]">
+          <div className="relative flex flex-col overflow-hidden md:block md:min-h-[32rem] lg:min-h-[34rem]">
+            <Image
+              src={competitionHeroImage}
+              alt=""
+              preload
+              sizes="(max-width: 767px) calc(100vw - 72px), (min-width: 1536px) 1536px, 100vw"
+              className="order-2 mx-4 mb-8 h-auto w-[calc(100%_-_2rem)] rounded-lg border border-white/10 object-contain shadow-[0_16px_36px_rgba(2,6,23,0.32)] md:absolute md:inset-0 md:m-0 md:h-full md:w-full md:rounded-none md:border-0 md:object-cover md:object-[68%_center] md:shadow-none lg:object-center"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(3,10,24,0.34)_0%,rgba(3,10,24,0.06)_50%,transparent_75%)] md:block"
+            />
+            <div aria-hidden="true" className="media-grid absolute inset-0 hidden opacity-[0.08] md:block" />
+
+            <div className="relative z-10 order-1 mx-auto flex w-full max-w-7xl items-start px-5 pt-9 pb-7 md:absolute md:inset-x-0 md:top-0 md:min-h-[32rem] md:px-10 md:py-12 lg:min-h-[34rem] lg:px-16 lg:py-14">
+              <div className="max-w-4xl text-white drop-shadow-[0_3px_18px_rgba(2,6,23,0.72)]">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <span
+                    aria-hidden="true"
+                    className="relative block h-8 w-8 shrink-0 overflow-hidden rounded-full shadow-[0_0_18px_rgba(96,165,250,0.6)] sm:h-9 sm:w-9"
+                  >
+                    <Image
+                      src="/images/competition/rtc-2027-original.jpg"
+                      alt=""
+                      width={1200}
+                      height={450}
+                      unoptimized
+                      className="absolute -left-[113px] -top-[53px] h-[540px] w-[1440px] max-w-none"
+                    />
+                  </span>
+                  <p className="font-mono text-lg font-black tracking-[0.12em] text-white sm:text-xl md:text-2xl lg:text-3xl">
+                    RTC 2027
+                  </p>
+                </div>
+                <h1
+                  id="competition-title"
+                  className="mt-5 text-[2rem] leading-[1.08] font-black tracking-[0.02em] text-white [text-shadow:0_0_18px_rgba(96,165,250,0.7),0_3px_3px_rgba(2,6,23,0.5)] sm:text-[2.25rem] md:mt-7 md:text-6xl lg:text-[5.25rem] xl:text-8xl"
+                >
+                  台灣盃火箭競賽
+                </h1>
+                <p className="mt-3 font-mono text-sm leading-tight font-black tracking-[0.12em] text-white [text-shadow:0_0_16px_rgba(96,165,250,0.62)] sm:text-base md:text-3xl lg:text-[2.65rem] xl:text-5xl">
+                  ROCKET TAIWAN CUP
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative overflow-hidden border-t border-white/10 bg-[radial-gradient(circle_at_50%_0%,rgba(30,64,175,0.13),transparent_38rem),linear-gradient(180deg,rgba(5,15,30,0.98),#050c18)] px-5 py-10 sm:px-10 sm:py-12 lg:px-16 lg:py-14">
+            <div
+              aria-hidden="true"
+              className="absolute left-0 top-0 h-24 w-20 rounded-tr-[2rem] border-r border-t border-orange-400/60 shadow-[8px_-8px_24px_rgba(249,115,22,0.12)] sm:w-28"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute right-0 bottom-0 h-20 w-28 rounded-bl-[2rem] border-b border-l border-orange-400/50 shadow-[-8px_8px_24px_rgba(249,115,22,0.1)] sm:w-40"
+            />
+            <div className="relative mx-auto max-w-7xl lg:px-16">
+              <div className="flex items-center gap-4">
+                <p className="font-mono text-xs font-bold tracking-[0.2em] text-orange-400 uppercase max-[359px]:text-[0.65rem] max-[359px]:tracking-[0.14em] sm:text-sm sm:tracking-[0.24em]">
+                  ABOUT THE COMPETITION
+                </p>
+                <span aria-hidden="true" className="h-px w-10 bg-orange-400 shadow-[0_0_12px_rgba(249,115,22,0.65)]" />
+              </div>
+              <p className="mt-7 max-w-5xl text-base leading-8 text-slate-200 sm:text-lg sm:leading-9">
+                2027 台灣盃火箭競賽（Rocket Taiwan Cup 2027）是由
+                <strong className="font-bold text-white">國家太空中心（TASA）與屏東縣政府共同舉辦</strong>
+                的第三屆台灣盃火箭競賽，旨在推廣火箭科技教育、培育太空工程人才，並提供參賽團隊從設計、製作、測試到實際發射的完整科研火箭實作經驗。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="px-5 py-20 sm:px-8 sm:py-24 lg:px-12 lg:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
@@ -55,10 +123,7 @@ export default function CompetitionPage() {
           </ol>
         </div>
       </section>
-      <PageLinks links={[
-        { href: "/about", label: "認識參賽團隊", description: "了解火大的元件如何一起把火箭帶到發射場。" },
-        { href: "/journey-2026", label: "查看 2026 任務", description: "從參賽成果、發射影片到火箭結構。" },
-      ]} />
+      <PageLinks />
     </main>
   );
 }

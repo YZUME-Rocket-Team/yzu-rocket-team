@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import PageHeader from "@/components/PageHeader";
 import PageLinks from "@/components/PageLinks";
-import { fundingBudget2027, missionGoals, officialDonationUrl } from "@/data/siteContent";
+import { fundingBudget2027, missionGoals } from "@/data/siteContent";
 
 export const metadata: Metadata = { title: "2027 計畫｜火大的元件" };
 
@@ -51,10 +51,7 @@ export default function Plan2027Page() {
           <div className="mt-4 flex flex-col gap-3 rounded-[2rem] border border-orange-400/35 bg-orange-500/[0.08] px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8"><span className="text-lg font-black text-white">2027 建議預算合計</span><span className="font-mono text-3xl font-black tracking-tight text-orange-200 sm:text-4xl">NT$200,000</span></div>
         </div>
       </section>
-      <PageLinks title="讓改進計畫能夠真正發生" links={[
-        { href: "/journey-2026", label: "回顧 2026 成果", description: "看這些改進方向從哪些實際經驗而來。" },
-        { href: officialDonationUrl, label: "支持 2027 任務", description: "使用元智大學官方募款連結支持團隊。" },
-      ]} />
+      <PageLinks />
     </main>
   );
 }

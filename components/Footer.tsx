@@ -4,7 +4,7 @@ import { officialDonationUrl } from "@/data/siteContent";
 
 const footerLinks = [
   { href: "/competition", label: "賽事簡介" },
-  { href: "/about", label: "關於我們" },
+  { href: "/#about", label: "關於我們" },
   { href: "/journey-2026", label: "2026 經歷" },
   { href: "/budget", label: "經費總結" },
   { href: "/plan-2027", label: "2027 計畫" },

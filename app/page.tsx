@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import { officialDonationUrl, pageLinks } from "@/data/siteContent";
+import PageLinks from "@/components/PageLinks";
+import TeamDivisionSection from "@/components/TeamDivisionSection";
+import { officialDonationUrl, teamFacts } from "@/data/siteContent";
 
 export const metadata: Metadata = {
   title: "火大的元件｜元智大學學生火箭團隊",
@@ -53,7 +55,7 @@ export default function Home() {
             <a href={officialDonationUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center rounded-full bg-orange-500 px-7 py-3.5 text-base font-bold text-white shadow-[0_0_36px_rgba(249,115,22,0.32)] transition hover:-translate-y-0.5 hover:bg-orange-400">
               支持我們 <span aria-hidden="true" className="ml-2">↗</span>
             </a>
-            <Link href="/about" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-base font-bold text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-white/35 hover:bg-white/10">
+            <Link href="#about" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-base font-bold text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-white/35 hover:bg-white/10">
               認識團隊
             </Link>
           </div>
@@ -61,31 +63,100 @@ export default function Home() {
         <div aria-hidden="true" className="hidden lg:block" />
       </section>
 
-      <section className="relative z-10 border-t border-white/10 bg-slate-950/80 px-5 py-20 sm:px-8 sm:py-24 lg:px-12 lg:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end lg:gap-16">
+      <section
+        id="about"
+        aria-labelledby="about-title"
+        className="relative z-10 scroll-mt-20 overflow-hidden border-t border-white/10 bg-[linear-gradient(180deg,#020617_0%,#07111f_48%,#050b14_100%)] px-5 py-20 sm:px-8 sm:py-24 lg:px-12 lg:py-28"
+      >
+        <div
+          aria-hidden="true"
+          className="hero-grid pointer-events-none absolute inset-x-0 top-0 h-[32rem] opacity-25"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-40 top-32 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl"
+        />
+
+        <div className="relative mx-auto max-w-7xl">
+          <div className="grid gap-7 lg:grid-cols-[0.8fr_1.2fr] lg:items-end lg:gap-16">
             <div>
-              <p className="font-mono text-sm font-semibold tracking-[0.2em] text-orange-400 uppercase">Mission Portal</p>
-              <h2 className="mt-5 text-balance text-4xl font-black tracking-tight text-white sm:text-5xl">從 2026 的升空，走向 2027。</h2>
+              <p className="font-mono text-sm font-semibold tracking-[0.2em] text-orange-400 uppercase">
+                About the Team
+              </p>
+              <h2
+                id="about-title"
+                className="mt-5 text-balance text-4xl font-black tracking-tight text-white sm:text-5xl"
+              >
+                我們是誰
+              </h2>
             </div>
-            <p className="max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
-              這裡是網站的任務入口。你可以分別了解競賽、團隊、2026 年的發射與火箭結構，以及我們為 2027 規劃的改進與經費用途。
+            <p className="max-w-2xl text-base leading-8 text-slate-300 sm:text-lg sm:leading-9">
+              來自元智大學的學生火箭團隊，從圖面、程式和零件開始，一路做到真正站上發射場。
             </p>
           </div>
-          <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {pageLinks.map((item) => (
-              <Link key={item.href} href={item.href} target={item.href === officialDonationUrl ? "_blank" : undefined} rel={item.href === officialDonationUrl ? "noopener noreferrer" : undefined} className="group flex min-h-64 flex-col justify-between rounded-3xl border border-white/10 bg-white/[0.035] p-6 transition hover:-translate-y-1 hover:border-orange-400/35 hover:bg-orange-500/[0.07] sm:p-8">
-                <div>
-                  <p className="font-mono text-xs font-bold tracking-[0.16em] text-orange-400 uppercase">{item.eyebrow}</p>
-                  <h3 className="mt-5 text-2xl font-black leading-9 text-white transition group-hover:text-orange-200">{item.title}</h3>
-                  <p className="mt-4 text-sm leading-7 text-slate-400">{item.description}</p>
-                </div>
-                <span className="mt-8 font-mono text-xs font-bold tracking-[0.14em] text-orange-400 uppercase">開啟傳送門 →</span>
-              </Link>
-            ))}
+
+          <div className="mt-12 grid items-center gap-12 sm:mt-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+            <div>
+              <div className="space-y-5 text-base leading-8 text-slate-300 sm:text-lg sm:leading-9">
+                <p>
+                  我們是來自元智大學的學生火箭團隊「火大的元件」，目前約 15 人。團隊成員一起參與火箭的結構、航電、酬載、回收、測試與系統整合。
+                </p>
+                <p>
+                  對我們來說，火箭不是一個展示作品，而是一個會逼著所有系統一起工作的工程專案。每一次設計、失敗、修改和測試，都是下一次升空的基礎。
+                </p>
+              </div>
+              <dl className="mt-9 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                {teamFacts.map((fact) => (
+                  <div
+                    key={fact.label}
+                    className={`rounded-2xl border p-5 ${
+                      fact.featured
+                        ? "border-orange-400/35 bg-orange-500/[0.08]"
+                        : "border-white/10 bg-white/[0.035]"
+                    }`}
+                  >
+                    <dt className="text-sm text-slate-400">{fact.label}</dt>
+                    <dd
+                      className={`mt-2 font-black text-white ${
+                        fact.featured ? "text-lg leading-7" : "text-2xl"
+                      }`}
+                    >
+                      {fact.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            <figure className="group relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900 shadow-2xl">
+              <Image
+                src="/images/team-rocket-2026.jpg"
+                alt="火大的元件團隊成員與 2026 年參賽火箭合照"
+                fill
+                sizes="(min-width: 1024px) 52vw, 100vw"
+                className="object-cover transition duration-700 group-hover:scale-[1.02] motion-reduce:transition-none"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-transparent"
+              />
+              <figcaption className="absolute inset-x-0 bottom-0 px-6 pb-6 pt-20 sm:px-8 sm:pb-8">
+                <span className="font-mono text-xs tracking-[0.18em] text-orange-300 uppercase">
+                  Team Huoda Components
+                </span>
+                <span className="mt-2 block text-xl font-bold text-white sm:text-2xl">
+                  團隊與火箭｜2026
+                </span>
+              </figcaption>
+            </figure>
           </div>
+
+          <TeamDivisionSection />
+
         </div>
       </section>
+
+      <PageLinks />
     </main>
   );
 }

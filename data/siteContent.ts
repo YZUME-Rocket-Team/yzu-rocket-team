@@ -24,6 +24,73 @@ export const teamFacts = [
   { value: "2027", label: "再次挑戰", featured: false },
 ] as const;
 
+export const teamDivisions = [
+  {
+    number: "01",
+    name: "結構組",
+    nameEn: "Structure",
+    icon: "structure",
+    image: "/images/team-groups/structure.png",
+    imageAlt: "火大的元件火箭整體灰色結構設計圖",
+    imageVariant: "wide",
+    responsibilities: [
+      "箭體結構設計",
+      "艙體配置規劃",
+      "結構強度分析",
+      "零組件製作組裝",
+      "全箭結構整合",
+    ],
+  },
+  {
+    number: "02",
+    name: "回收組",
+    nameEn: "Recovery",
+    icon: "recovery",
+    image: "/images/team-groups/recovery.png",
+    imageAlt: "火箭雙降落傘回收系統展開示意圖",
+    imageVariant: "schematic",
+    responsibilities: [
+      "降落傘設計",
+      "開傘流程規劃",
+      "釋放機構設計",
+      "開傘與負重測試",
+      "回收系統整合",
+    ],
+  },
+  {
+    number: "03",
+    name: "酬載組",
+    nameEn: "Payload",
+    icon: "payload",
+    image: "/images/team-groups/payload.png",
+    imageAlt: "粉紅色酬載裝置照片",
+    imageVariant: "photo",
+    responsibilities: [
+      "酬載任務規劃",
+      "酬載裝置設計",
+      "防水防撞設計",
+      "通訊系統整合",
+      "任務功能驗證",
+    ],
+  },
+  {
+    number: "04",
+    name: "航電組",
+    nameEn: "Avionics",
+    icon: "avionics",
+    image: "/images/team-groups/avionics.png",
+    imageAlt: "火大的元件自製航電電路板與電池模組",
+    imageVariant: "module",
+    responsibilities: [
+      "飛行電路設計",
+      "感測器整合",
+      "飛行資料紀錄",
+      "飛行狀態判斷",
+      "航電系統測試",
+    ],
+  },
+] as const;
+
 export const engineeringImages = [
   {
     src: "/images/rocket-internals.jpg",
@@ -120,7 +187,7 @@ export const pageLinks = [
     description: "了解學生團隊如何將設計、製造與發射整合成一項完整任務。",
   },
   {
-    href: "/about",
+    href: "#about",
     eyebrow: "Team",
     title: "認識火大的元件",
     description: "來自元智大學、從圖面與程式一路做到發射場的學生火箭團隊。",

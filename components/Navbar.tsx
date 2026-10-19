@@ -9,7 +9,6 @@ import SupportMenu from "@/components/SupportMenu";
 const navigation = [
   { label: "首頁", href: "/" },
   { label: "賽事簡介", href: "/competition" },
-  { label: "關於我們", href: "/about" },
   { label: "2026 經歷", href: "/journey-2026" },
   { label: "經費總結", href: "/budget" },
   { label: "2027 計畫", href: "/plan-2027" },

@@ -1,0 +1,564 @@
+.section {
+  position: relative;
+  left: 50%;
+  width: min(90rem, calc(100vw - 2.5rem));
+  margin-top: 6rem;
+  padding-top: 4.75rem;
+  transform: translateX(-50%);
+  isolation: isolate;
+}
+
+.sectionBackdrop {
+  position: absolute;
+  z-index: -1;
+  inset: 0 -2rem -3rem;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 4% 12%, rgb(30 64 96 / 22%), transparent 32%),
+    radial-gradient(circle at 96% 5%, rgb(19 55 88 / 19%), transparent 30%),
+    radial-gradient(circle at 77% 85%, rgb(249 115 22 / 5%), transparent 20%);
+  mask-image: linear-gradient(to bottom, transparent, black 9%, black 94%, transparent);
+}
+
+.header {
+  position: relative;
+  z-index: 2;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.35rem;
+  color: #fb923c;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.eyebrow span {
+  width: clamp(2.5rem, 6vw, 5rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #f97316);
+  box-shadow: 0 0 10px rgb(249 115 22 / 32%);
+}
+
+.eyebrow span:last-child {
+  background: linear-gradient(90deg, #f97316, transparent);
+}
+
+.title {
+  margin-top: 0.55rem;
+  color: #f8fafc;
+  font-size: clamp(2.65rem, 4.2vw, 3.45rem);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+}
+
+.title span {
+  color: #f97316;
+  text-shadow: 0 0 30px rgb(249 115 22 / 15%);
+}
+
+.description {
+  max-width: 49rem;
+  margin: 0.9rem auto 0;
+  color: #cbd5e1;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+}
+
+.cardGrid {
+  display: grid;
+  gap: 1rem 1.8rem;
+  margin-top: 2rem;
+}
+
+.cardFrame {
+  position: relative;
+  min-width: 0;
+  padding: 1px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f97316 0 5%, #21384d 13% 88%, #f97316 96%);
+  clip-path: polygon(
+    1.15rem 0,
+    100% 0,
+    100% calc(100% - 1.25rem),
+    calc(100% - 1.25rem) 100%,
+    1rem 100%,
+    0 calc(100% - 1rem),
+    0 1.15rem
+  );
+  transition:
+    transform 350ms ease,
+    filter 350ms ease;
+}
+
+.cardFrame::before,
+.cardFrame::after {
+  position: absolute;
+  z-index: 5;
+  display: block;
+  width: 3.4rem;
+  height: 3.4rem;
+  pointer-events: none;
+  content: "";
+}
+
+.cardFrame::before {
+  top: 0;
+  left: 0;
+  border-top: 3px solid #f97316;
+  border-left: 3px solid #f97316;
+  clip-path: polygon(34% 0, 100% 0, 100% 8%, 40% 8%, 8% 40%, 8% 100%, 0 100%, 0 34%);
+}
+
+.cardFrame::after {
+  right: 0;
+  bottom: 0;
+  border-right: 3px solid #f97316;
+  border-bottom: 3px solid #f97316;
+  clip-path: polygon(92% 0, 100% 0, 100% 66%, 66% 100%, 0 100%, 0 92%, 60% 92%, 92% 60%);
+}
+
+.card {
+  position: relative;
+  min-height: 37rem;
+  overflow: hidden;
+  background: #030b14;
+  clip-path: inherit;
+}
+
+.imageStage {
+  position: relative;
+  height: 19rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 56% 36%, rgb(31 61 91 / 45%), transparent 48%),
+    linear-gradient(145deg, #071523, #030a13 74%);
+}
+
+.cardGridPattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.24;
+  background-image:
+    linear-gradient(rgb(125 155 181 / 16%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(125 155 181 / 16%) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(110deg, black, transparent 84%);
+}
+
+.technicalOverlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: rgb(136 165 191 / 22%);
+  pointer-events: none;
+}
+
+.technicalOverlay path,
+.technicalOverlay circle {
+  stroke: currentColor;
+  stroke-width: 1;
+}
+
+.imageGlow {
+  position: absolute;
+  top: 30%;
+  left: 14%;
+  width: 45%;
+  height: 45%;
+  border-radius: 999px;
+  background: rgb(249 115 22 / 7%);
+  filter: blur(55px);
+}
+
+.imageWrap {
+  --image-scale: 1;
+
+  position: absolute;
+  z-index: 1;
+  transform: scale(var(--image-scale));
+  transition: transform 600ms ease;
+}
+
+.teamImage {
+  object-fit: contain;
+  filter: drop-shadow(0 18px 22px rgb(0 0 0 / 55%));
+}
+
+.wide {
+  --image-scale: 1.2;
+
+  inset: -1.5rem -2rem 0;
+}
+
+.schematic {
+  inset: -1.15rem 25% -1rem;
+}
+
+.photo {
+  inset: 0.25rem 8% 1.75rem 2%;
+}
+
+.module {
+  inset: -0.25rem 2% -1.75rem 17%;
+}
+
+.imageShade {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 34%, rgb(3 10 19 / 12%) 55%, #030a13 100%);
+  pointer-events: none;
+}
+
+.numberBlock {
+  position: absolute;
+  z-index: 4;
+  top: 1.35rem;
+  right: 1.45rem;
+  color: #64748b;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.numberBlock span {
+  display: block;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.numberBlock small {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.67rem;
+  letter-spacing: 0.12em;
+}
+
+.cardInfo {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.35rem 1.55rem 1.55rem;
+  background: linear-gradient(180deg, #030a13, #020810);
+}
+
+.identity {
+  display: grid;
+  grid-template-columns: 4.8rem minmax(0, 1fr);
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.hexagon {
+  position: relative;
+  display: grid;
+  width: 4.8rem;
+  height: 4.8rem;
+  place-items: center;
+  color: #fb923c;
+  background: #f97316;
+  filter: drop-shadow(0 0 12px rgb(249 115 22 / 14%));
+}
+
+.hexagon > span {
+  position: absolute;
+  inset: 2px;
+  background: #06101b;
+}
+
+.iconSvg {
+  position: relative;
+  z-index: 1;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.nameBlock h4 {
+  color: #f8fafc;
+  font-size: clamp(2rem, 4.5vw, 2.45rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+}
+
+.nameBlock p {
+  margin-top: 0.55rem;
+  color: #8492a4;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(100 116 139 / 70%), transparent);
+}
+
+.responsibilities {
+  display: grid;
+  gap: 0.45rem;
+  color: #dbe4ee;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.responsibilities li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.responsibilities li > span:first-child {
+  flex: 0 0 auto;
+  color: #f97316;
+  font-size: 1.8rem;
+  font-weight: 500;
+  line-height: 0.6;
+  text-shadow: 0 0 10px rgb(249 115 22 / 30%);
+}
+
+@media (min-width: 640px) {
+  .section {
+    width: min(90rem, calc(100vw - 4rem));
+  }
+
+  .card {
+    min-height: 39rem;
+  }
+
+  .imageStage {
+    height: 22rem;
+  }
+
+  .wide {
+    --image-scale: 1;
+
+    inset: 0.25rem 1rem;
+  }
+
+  .cardInfo {
+    padding: 1.65rem 2rem 1.8rem;
+  }
+
+  .identity {
+    grid-template-columns: 5.25rem minmax(0, 1fr);
+  }
+
+  .hexagon {
+    width: 5.25rem;
+    height: 5.25rem;
+  }
+
+  .responsibilities {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem 1.6rem;
+  }
+}
+
+@media (min-width: 1180px) {
+  .section {
+    width: min(90.75rem, calc(100vw - 4rem));
+    padding-top: 0.875rem;
+  }
+
+  .cardGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2rem;
+    margin-top: 0.875rem;
+  }
+
+  .card {
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  .imageStage {
+    position: absolute;
+    inset: 0;
+    height: auto;
+  }
+
+  .cardGridPattern {
+    background-size: 30px 30px;
+  }
+
+  .wide {
+    --image-scale: 1.06;
+
+    inset: -10% 0 18%;
+  }
+
+  .schematic {
+    --image-scale: 0.94;
+
+    inset: 0 30.25% 20% -5.25%;
+    transform-origin: 50% 0;
+  }
+
+  .photo {
+    --image-scale: 1.04;
+
+    inset: 0 20% 40% 4%;
+  }
+
+  .module {
+    --image-scale: 1.55;
+
+    inset: -3% 0 14% 0.25%;
+    transform-origin: 50% 0;
+    mask-image: linear-gradient(to bottom, black 0 45%, rgb(0 0 0 / 62%) 56%, transparent 68%);
+  }
+
+  .cardInfo {
+    position: absolute;
+    right: 2rem;
+    bottom: 1.1rem;
+    left: 2rem;
+    grid-template-columns: minmax(14rem, 0.92fr) 1px minmax(14.5rem, 1.12fr);
+    gap: clamp(1rem, 1.7vw, 1.8rem);
+    align-items: center;
+    padding: 0;
+    background: transparent;
+  }
+
+  .cardFrame:nth-child(even) .cardInfo {
+    grid-template-columns: 19.625rem 1px minmax(0, 1fr);
+  }
+
+  .identity {
+    grid-template-columns: clamp(4.25rem, 5.5vw, 5.25rem) minmax(0, 1fr);
+    gap: clamp(1.2rem, 2vw, 2rem);
+  }
+
+  .hexagon {
+    width: clamp(4.25rem, 5.5vw, 5.25rem);
+    height: clamp(4.25rem, 5.5vw, 5.25rem);
+  }
+
+  .iconSvg {
+    width: clamp(1.9rem, 2.5vw, 2.25rem);
+    height: clamp(1.9rem, 2.5vw, 2.25rem);
+  }
+
+  .nameBlock h4 {
+    font-size: clamp(1.9rem, 2.4vw, 2.45rem);
+  }
+
+  .nameBlock p {
+    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+  }
+
+  .divider {
+    width: 1px;
+    height: 8.7rem;
+    background: linear-gradient(180deg, transparent, rgb(100 116 139 / 82%) 12% 88%, transparent);
+  }
+
+  .responsibilities {
+    grid-template-columns: 1fr;
+    gap: clamp(0.25rem, 0.55vw, 0.5rem);
+    font-size: clamp(0.82rem, 1.18vw, 1.05rem);
+  }
+
+  .responsibilities li {
+    gap: 0.7rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .section {
+    margin-top: 4.5rem;
+    padding-top: 3.75rem;
+  }
+
+  .desktopBreak {
+    display: none;
+  }
+
+  .description {
+    max-width: 22rem;
+  }
+
+  .cardGrid {
+    margin-top: 1.75rem;
+  }
+
+  .imageStage {
+    height: 17.5rem;
+  }
+
+  .wide {
+    --image-scale: 1;
+
+    inset: 0.75rem 0.75rem 1.5rem;
+  }
+
+  .schematic {
+    inset: -0.75rem 26% -1rem;
+  }
+
+  .photo {
+    inset: 0.5rem 2% 1rem;
+  }
+
+  .module {
+    inset: 0.25rem 5% -1.5rem 12%;
+  }
+
+  .numberBlock {
+    top: 1rem;
+    right: 1.15rem;
+  }
+
+  .numberBlock span {
+    font-size: 1.7rem;
+  }
+
+  .nameBlock h4 {
+    font-size: 2.15rem;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cardFrame:hover {
+    transform: translateY(-5px);
+    filter: drop-shadow(0 16px 28px rgb(2 8 16 / 55%)) drop-shadow(0 0 16px rgb(249 115 22 / 10%));
+  }
+
+  .cardFrame:hover .imageWrap {
+    transform: scale(calc(var(--image-scale) + 0.035));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cardFrame,
+  .imageWrap {
+    transition: none;
+  }
+
+  .cardFrame:hover {
+    transform: none;
+  }
+
+  .cardFrame:hover .imageWrap {
+    transform: scale(var(--image-scale));
+  }
+}
