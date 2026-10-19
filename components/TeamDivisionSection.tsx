@@ -116,6 +116,7 @@ export default function TeamDivisionSection() {
                     alt={division.imageAlt}
                     fill
                     unoptimized={
+                      division.imageVariant === "schematic" ||
                       division.imageVariant === "photo" ||
                       division.imageVariant === "module"
                     }

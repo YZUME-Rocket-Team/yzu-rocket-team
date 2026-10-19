@@ -3,18 +3,23 @@ export const officialDonationUrl = "https://donation.yzu.edu.tw/eform_add.aspx";
 export const competitionFacts = [
   {
     number: "01",
-    title: "自己設計",
-    description: "從結構、航電到回收系統，由學生團隊完成設計與整合。",
+    title: "設計與規劃",
+    description: "完成火箭結構、航電與回收等系統設計，規劃完整飛行任務。",
   },
   {
     number: "02",
-    title: "實際製造",
-    description: "不是紙上作業，而是把零件、電子系統與火箭真正做出來。",
+    title: "製作與組裝",
+    description: "將設計轉化為實際零件，整合各項系統，完成火箭箭體。",
   },
   {
     number: "03",
-    title: "真正發射",
-    description: "所有設計最後都要接受實際飛行與回收的驗證。",
+    title: "測試與驗證",
+    description: "進行地面測試與系統驗證，逐步確認飛行安全與系統可靠度。",
+  },
+  {
+    number: "04",
+    title: "實際發射",
+    description: "在發射場執行飛行任務，透過實際升空與回收驗證設計。",
   },
 ] as const;
 

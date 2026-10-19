@@ -31,10 +31,12 @@ function PortalCard({
   label,
   support = false,
   fullWidth = false,
+  compact = false,
   onOpenTutorial,
   tutorialButtonRef,
 }: NavigationCard & {
   fullWidth?: boolean;
+  compact?: boolean;
   onOpenTutorial?: () => void;
   tutorialButtonRef?: React.RefObject<HTMLButtonElement | null>;
 }) {
@@ -42,8 +44,11 @@ function PortalCard({
   const imageSrc = isPrevious
     ? "/images/navigation/previous.png"
     : "/images/navigation/next.png";
-  const cardClassName =
-    "group relative isolate flex h-[clamp(16rem,38vw,25rem)] overflow-hidden rounded-[2rem] border border-white/15 bg-slate-900 shadow-[0_20px_70px_rgba(2,6,23,0.38)] transition-[border-color,box-shadow,transform] duration-500 hover:-translate-y-1 hover:border-orange-400/55 hover:shadow-[0_22px_75px_rgba(249,115,22,0.18)] focus-within:border-orange-400/55 focus-within:shadow-[0_22px_75px_rgba(249,115,22,0.18)] motion-reduce:transform-none motion-reduce:transition-none";
+  const cardClassName = `group relative isolate flex overflow-hidden border border-white/15 bg-slate-900 shadow-[0_20px_70px_rgba(2,6,23,0.38)] transition-[border-color,box-shadow,transform] duration-500 hover:-translate-y-1 hover:border-orange-400/55 hover:shadow-[0_22px_75px_rgba(249,115,22,0.18)] focus-within:border-orange-400/55 focus-within:shadow-[0_22px_75px_rgba(249,115,22,0.18)] motion-reduce:transform-none motion-reduce:transition-none ${
+    compact
+      ? "h-[clamp(12rem,19vw,17rem)] rounded-3xl"
+      : "h-[clamp(16rem,38vw,25rem)] rounded-[2rem]"
+  }`;
   const focusClassName =
     "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-300";
 
@@ -58,7 +63,7 @@ function PortalCard({
             ? "(min-width: 1280px) 1280px, 100vw"
             : "(min-width: 1280px) 630px, (min-width: 768px) 50vw, 100vw"
         }
-        className="object-cover object-[68%_center] transition-transform duration-1000 ease-out group-hover:scale-[1.045] motion-reduce:transform-none motion-reduce:transition-none"
+        className={`object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.045] motion-reduce:transform-none motion-reduce:transition-none ${compact ? "object-[center_60%]" : "object-[68%_center]"}`}
       />
       <span
         aria-hidden="true"
@@ -72,8 +77,8 @@ function PortalCard({
   );
 
   const text = (
-    <span className="pointer-events-none relative z-20 flex w-full flex-col items-start px-6 pb-6 pt-7 sm:px-8 sm:pb-8 sm:pt-8 lg:px-10 lg:pb-10 lg:pt-10">
-      <span className="inline-flex items-center gap-2 font-mono text-base font-bold tracking-[0.09em] text-orange-300 sm:text-lg">
+    <span className={`pointer-events-none relative z-20 flex w-full flex-col items-start px-6 pb-6 pt-7 sm:px-8 sm:pb-8 sm:pt-8 ${compact ? "lg:px-8 lg:pb-8 lg:pt-8" : "lg:px-10 lg:pb-10 lg:pt-10"}`}>
+      <span className={`inline-flex items-center gap-2 font-mono font-bold tracking-[0.09em] text-orange-300 ${compact ? "text-xs sm:text-sm" : "text-base sm:text-lg"}`}>
         {isPrevious && (
           <span
             aria-hidden="true"
@@ -92,7 +97,7 @@ function PortalCard({
           </span>
         )}
       </span>
-      <span className="mt-3 max-w-2xl text-balance text-3xl font-black leading-[1.12] text-white drop-shadow-lg sm:text-4xl lg:text-[2.75rem]">
+      <span className={`mt-3 max-w-2xl text-balance font-black leading-[1.12] text-white drop-shadow-lg ${compact ? "text-3xl lg:text-4xl" : "text-3xl sm:text-4xl lg:text-[2.75rem]"}`}>
         {label}
       </span>
     </span>
@@ -130,7 +135,7 @@ function PortalCard({
   );
 }
 
-export default function PageLinks() {
+export default function PageLinks({ compact = false }: { compact?: boolean }) {
   const pathname = usePathname();
   const [showTutorial, setShowTutorial] = useState(false);
   const tutorialButtonRef = useRef<HTMLButtonElement>(null);
@@ -174,7 +179,7 @@ export default function PageLinks() {
     <>
       <nav
         aria-label="前後頁導覽"
-        className="relative border-t border-white/10 bg-slate-950/70 px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
+        className={`relative px-5 sm:px-8 lg:px-12 ${compact ? "pt-6 pb-10 sm:pt-8 sm:pb-12 lg:pt-8 lg:pb-16" : "border-t border-white/10 bg-slate-950/70 py-16 sm:py-20 lg:py-24"}`}
       >
         <div
           className={`mx-auto grid max-w-7xl gap-5 ${cards.length === 2 ? "md:grid-cols-2" : "grid-cols-1"}`}
@@ -184,6 +189,7 @@ export default function PageLinks() {
               key={`${card.direction}-${card.href}`}
               {...card}
               fullWidth={cards.length === 1}
+              compact={compact}
               onOpenTutorial={card.support ? () => setShowTutorial(true) : undefined}
               tutorialButtonRef={card.support ? tutorialButtonRef : undefined}
             />

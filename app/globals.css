@@ -4,6 +4,10 @@
   color-scheme: dark;
   --background: #050b14;
   --foreground: #f8fafc;
+  --site-navbar-gap: 0px;
+  --site-navbar-panel-height: 4.125rem;
+  --site-navbar-height: calc(var(--site-navbar-gap) + var(--site-navbar-panel-height));
+  --site-navbar-peek-height: 10px;
 }
 
 * {
@@ -31,6 +35,252 @@ body {
     linear-gradient(90deg, rgb(148 163 184 / 7%) 1px, transparent 1px);
   background-size: 72px 72px;
   mask-image: linear-gradient(to bottom, black 18%, transparent 92%);
+}
+
+.site-navbar-shell {
+  --site-navbar-inline-gap: 0.75rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--site-navbar-height);
+  padding-inline: var(--site-navbar-inline-gap);
+  background: transparent;
+  pointer-events: none;
+}
+
+.site-navbar {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--site-navbar-panel-height);
+  max-width: 96rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  border: 1px solid rgb(255 255 255 / 15%);
+  border-radius: 0 0 1rem 1rem;
+  transform: translateY(0);
+  pointer-events: auto;
+  box-shadow: 0 8px 28px rgb(0 0 0 / 16%);
+  transition: transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 200ms;
+}
+
+/* Keep the layout slot fixed; only the glass panel moves above the viewport. */
+.site-navbar-shell[data-collapsed="true"] .site-navbar {
+  transform: translateY(calc(-100% + var(--site-navbar-peek-height)));
+  pointer-events: none;
+}
+
+/* Use a generous touch target; desktop retains a 32px hover zone. */
+.site-navbar-reveal {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  width: calc(100% - 2 * var(--site-navbar-inline-gap));
+  max-width: 96rem;
+  height: 44px;
+  transform: translateX(-50%);
+  border: 0;
+  border-radius: 0 0 1rem 1rem;
+  background: transparent;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.site-navbar-shell[data-collapsed="true"] .site-navbar-reveal {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.site-navbar-reveal span {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  width: 2rem;
+  height: 2px;
+  transform: translateX(-50%);
+  border-radius: 1rem;
+  background: rgb(255 255 255 / 30%);
+}
+
+.site-navbar-reveal:focus-visible {
+  outline: 2px solid #fdba74;
+  outline-offset: -2px;
+  background: rgb(8 16 28 / 75%);
+}
+
+/* Filter only the panel surface so dropdowns can sample their own backdrop. */
+.site-navbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: rgb(8 16 28 / 80%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  backdrop-filter: blur(18px) saturate(130%);
+  pointer-events: none;
+  transition: background-color 200ms;
+}
+
+.site-navbar[data-over-hero="true"][data-scrolled="false"]::before {
+  background: rgb(8 16 28 / 45%);
+}
+
+.site-navbar[data-scrolled="true"]::before {
+  background: rgb(8 16 28 / 84%);
+}
+
+.site-navbar[data-scrolled="true"] {
+  box-shadow: 0 8px 28px rgb(0 0 0 / 22%);
+}
+
+/* Match the transparent sticky shell so the Hero photograph starts at y=0. */
+.home-page {
+  margin-top: calc(-1 * var(--site-navbar-height));
+}
+
+/* Supply photograph detail behind the mobile glass without recropping
+   the existing launch composition below the introductory text. */
+.home-hero-nav-photo {
+  height: calc(var(--site-navbar-height) + 3rem);
+  overflow: hidden;
+  opacity: 0.75;
+  mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+}
+
+@media (min-width: 640px) {
+  .site-navbar-shell {
+    --site-navbar-inline-gap: 1.5rem;
+  }
+
+  .site-navbar {
+    padding-inline: 1.5rem;
+  }
+}
+
+.home-hero,
+.home-hero-content {
+  min-height: max(54rem, 100svh);
+}
+
+.home-hero-content {
+  padding-top: 8rem;
+  padding-bottom: 22rem;
+}
+
+.home-hero-photo {
+  inset: auto 0 0;
+  height: 62%;
+}
+
+.home-hero-image {
+  object-position: 30% 65%;
+}
+
+.home-hero-shade {
+  background: linear-gradient(180deg, #020617 0%, #020617 32%, rgb(2 6 23 / 94%) 43%, rgb(2 6 23 / 30%) 66%, rgb(2 6 23 / 8%) 100%);
+}
+
+.home-hero-edge {
+  background: linear-gradient(0deg, rgb(2 6 23 / 65%), transparent 16%);
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .home-hero,
+  .home-hero-content {
+    min-height: max(64rem, 100svh);
+  }
+
+  .home-hero-content {
+    padding-top: 9rem;
+    padding-bottom: 30rem;
+  }
+
+  .home-hero-photo {
+    height: 60%;
+  }
+
+  .home-hero-image {
+    object-position: 30% 55%;
+  }
+
+  .home-hero-shade {
+    background: linear-gradient(180deg, #020617 0%, #020617 40%, rgb(2 6 23 / 88%) 46%, rgb(2 6 23 / 14%) 60%, rgb(2 6 23 / 6%) 100%);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --site-navbar-panel-height: 4.5rem;
+  }
+
+  .site-navbar-shell {
+    --site-navbar-inline-gap: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  .site-navbar {
+    padding-inline: 3rem;
+  }
+
+  .site-navbar-reveal {
+    height: 32px;
+  }
+
+  .home-hero,
+  .home-hero-content {
+    min-height: max(46rem, 100svh);
+  }
+
+  .home-hero-content {
+    padding-top: 9rem;
+    padding-bottom: 6rem;
+  }
+
+  /* The rocket is at 48% of the source. Offset and size the container to
+     place it near 72% of the Hero while retaining the ground and smoke. */
+  .home-hero-photo {
+    inset: 0 auto 0 31%;
+    width: 85%;
+    height: 100%;
+    mask-image: linear-gradient(90deg, transparent, #000 18%);
+  }
+
+  .home-hero-image {
+    object-position: center 25%;
+  }
+
+  .home-hero-shade {
+    background: linear-gradient(90deg, #020617 0%, #020617 24%, rgb(2 6 23 / 95%) 32%, rgb(2 6 23 / 82%) 40%, rgb(2 6 23 / 52%) 52%, rgb(2 6 23 / 16%) 67%, rgb(2 6 23 / 6%) 100%);
+  }
+
+  .home-hero-edge {
+    background: linear-gradient(180deg, rgb(2 6 23 / 12%) 0%, transparent 30%, transparent 75%, rgb(2 6 23 / 45%) 100%);
+  }
+}
+
+.site-navbar :is(a, button):focus-visible {
+  outline: 2px solid #fdba74;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .site-navbar,
+  .site-navbar::before,
+  .site-navbar *,
+  .site-navbar *::before,
+  .site-navbar *::after {
+    transition: none;
+  }
 }
 
 .media-grid {

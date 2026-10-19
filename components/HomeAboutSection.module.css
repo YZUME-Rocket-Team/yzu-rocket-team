@@ -1,0 +1,480 @@
+.overview {
+  position: relative;
+  display: grid;
+  grid-template-areas: "copy" "gallery" "facts";
+  gap: 2rem;
+  max-width: 96rem;
+  margin-inline: auto;
+}
+
+.copy {
+  grid-area: copy;
+  min-width: 0;
+}
+
+.eyebrow {
+  color: #fb923c;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: 1rem;
+  color: #fff;
+  font-size: clamp(2.75rem, 4.6vw, 4.75rem);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 1.15;
+}
+
+.lead {
+  margin-top: 1.5rem;
+  color: #d6dee9;
+  font-size: clamp(1.05rem, 1.35vw, 1.35rem);
+  line-height: 1.8;
+}
+
+.description {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+  color: #bfcad8;
+  font-size: 1rem;
+  line-height: 1.9;
+}
+
+.facts {
+  grid-area: facts;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-self: end;
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.factCard {
+  display: flex;
+  min-width: 0;
+  height: 11.5rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0.6rem;
+  border: 1px solid rgb(249 115 22 / 34%);
+  border-radius: 1.1rem;
+  background: linear-gradient(145deg, rgb(17 28 40 / 75%), rgb(8 15 25 / 90%));
+  text-align: center;
+}
+
+.logoCard {
+  position: relative;
+  grid-column: 1 / -1;
+  border-color: rgb(255 255 255 / 20%);
+}
+
+.logo {
+  object-fit: contain;
+  padding: 1rem;
+}
+
+.awardYear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  color: #fb923c;
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.awardYear svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  flex-shrink: 0;
+}
+
+.awardCompetition {
+  margin-top: 0.65rem;
+  color: #cbd5e1;
+  font-size: 0.75rem;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+
+.awardCategory {
+  color: #f1f5f9;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.8;
+}
+
+.awardPlace {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 0.9rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.awardPlace svg {
+  width: 1rem;
+  height: 2rem;
+  flex-shrink: 0;
+  color: #fb923c;
+}
+
+.awardPlace svg:last-child {
+  transform: scaleX(-1);
+}
+
+.gallery {
+  grid-area: gallery;
+  display: grid;
+  min-width: 0;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-self: stretch;
+  gap: 0.8rem;
+}
+
+.stage {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 25%);
+  border-radius: 1.4rem;
+  background: #101c2a;
+  box-shadow: 0 12px 36px rgb(0 0 0 / 18%);
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  cursor: grab;
+}
+
+.stage:active {
+  cursor: grabbing;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 650ms ease-in-out;
+  pointer-events: none;
+}
+
+.slide[data-active="true"] {
+  opacity: 1;
+}
+
+.photo {
+  object-fit: cover;
+  object-position: center;
+}
+
+.caption {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  gap: 0.3rem;
+  padding: 4rem 1rem 3.7rem;
+  background: linear-gradient(0deg, rgb(3 9 17 / 92%), rgb(3 9 17 / 68%) 60%, transparent);
+  color: #fff;
+}
+
+.caption strong {
+  font-size: 1.05rem;
+  font-weight: 750;
+}
+
+.caption > span {
+  color: #d1dae5;
+  font-size: 0.8rem;
+  line-height: 1.65;
+}
+
+.arrow {
+  position: absolute;
+  top: 45%;
+  z-index: 1;
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  transform: translateY(-50%);
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 50%;
+  background: rgb(5 11 20 / 55%);
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 200ms, border-color 200ms;
+}
+
+.previous {
+  left: 0.75rem;
+}
+
+.next {
+  right: 0.75rem;
+}
+
+.arrow:hover {
+  background: rgb(5 11 20 / 80%);
+  border-color: #fb923c;
+}
+
+.controls {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.4rem;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.playToggle {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #e2e8f0;
+  cursor: pointer;
+}
+
+.playToggle svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.playToggle:hover {
+  background: rgb(255 255 255 / 10%);
+}
+
+.playToggle:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.indicators {
+  display: flex;
+}
+
+.indicators button {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 0.4rem;
+  background: transparent;
+  cursor: pointer;
+}
+
+.indicators span {
+  width: 1.5rem;
+  height: 0.2rem;
+  border-radius: 1rem;
+  background: rgb(255 255 255 / 40%);
+  transition: background-color 200ms;
+}
+
+.indicators button[aria-current="true"] span {
+  background: #fb923c;
+}
+
+.thumbnails {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.thumbnail {
+  position: relative;
+  min-width: 0;
+  min-height: 44px;
+  aspect-ratio: 1.85;
+  overflow: hidden;
+  border: 2px solid rgb(255 255 255 / 10%);
+  border-radius: 0.75rem;
+  background: #101c2a;
+  opacity: 0.7;
+  cursor: pointer;
+  transition: border-color 200ms, opacity 200ms;
+}
+
+.thumbnail[aria-current="true"] {
+  border-color: #fb923c;
+  opacity: 1;
+}
+
+.thumbnail:hover {
+  opacity: 1;
+  border-color: rgb(251 146 60 / 65%);
+}
+
+.gallery button:focus-visible {
+  outline: 2px solid #fdba74;
+  outline-offset: -4px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .overview {
+    gap: 2.5rem;
+  }
+
+  .description {
+    font-size: 1.1rem;
+  }
+
+  .facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .factCard {
+    height: 13.25rem;
+    padding-inline: 0.75rem;
+  }
+
+  .logoCard {
+    grid-column: auto;
+  }
+
+  .awardYear {
+    font-size: 2.1rem;
+  }
+
+  .awardYear svg {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  .awardCompetition {
+    font-size: 0.85rem;
+  }
+
+  .awardCategory {
+    font-size: 0.95rem;
+  }
+
+  .awardPlace {
+    font-size: 1.7rem;
+    gap: 0.45rem;
+  }
+
+  .awardPlace svg {
+    width: 1.2rem;
+    height: 2.2rem;
+  }
+
+  .gallery {
+    gap: 1rem;
+  }
+
+  .stage {
+    border-radius: 1.75rem;
+  }
+
+  .caption {
+    padding: 5rem 1.5rem 1.75rem;
+    padding-right: 12rem;
+  }
+
+  .caption strong {
+    font-size: 1.3rem;
+  }
+
+  .caption > span {
+    font-size: 0.9rem;
+  }
+
+  .controls {
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .previous {
+    left: 1rem;
+  }
+
+  .next {
+    right: 1rem;
+  }
+
+  .thumbnails {
+    gap: 1rem;
+  }
+
+  .thumbnail {
+    border-radius: 1rem;
+  }
+
+}
+
+@media (min-width: 1200px) {
+  .overview {
+    grid-template-areas: "copy gallery" "facts gallery";
+    grid-template-columns: minmax(0, 0.44fr) minmax(0, 0.56fr);
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(2rem, 3vw, 3.5rem);
+    row-gap: 2rem;
+  }
+
+  .eyebrow {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 1.05rem;
+  }
+
+  .facts {
+    gap: 1rem;
+  }
+
+  .stage {
+    aspect-ratio: 1.47;
+  }
+
+  .caption {
+    padding-right: 11rem;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide, .gallery button, .indicators span {
+    transition: none;
+  }
+
+}
