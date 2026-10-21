@@ -135,7 +135,7 @@ function PortalCard({
   );
 }
 
-export default function PageLinks({ compact = false }: { compact?: boolean }) {
+export default function PageLinks({ compact = false, nextLabel }: { compact?: boolean; nextLabel?: string }) {
   const pathname = usePathname();
   const [showTutorial, setShowTutorial] = useState(false);
   const tutorialButtonRef = useRef<HTMLButtonElement>(null);
@@ -159,7 +159,7 @@ export default function PageLinks({ compact = false }: { compact?: boolean }) {
     cards.push({
       direction: "next",
       href: nextPage.href,
-      label: nextPage.label,
+      label: nextLabel ?? nextPage.label,
     });
   } else {
     cards.push({

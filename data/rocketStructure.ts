@@ -32,7 +32,7 @@ export const structureStages: StructureStage[] = [
   {
     stage: "STAGE 01",
     title: "01 鼻錐與連接段",
-    image: "/images/rocket-structure/nose-cone.png",
+    image: "/images/rocket-structure/nose-cone-hd-v2.png",
     imageAlt: "火箭鼻錐、降落傘釋放裝置與前後段連接結構",
     points: [
       {
@@ -52,7 +52,7 @@ export const structureStages: StructureStage[] = [
     title: "02 模組化酬載段",
     introduction:
       "酬載段使用碳纖維板與鋁圓棒建立多層結構，把有限的箭體空間分成不同功能艙室。",
-    image: "/images/rocket-structure/payload-module.png",
+    image: "/images/rocket-structure/payload-module-hd-v2.png",
     imageAlt: "火箭酬載段的碳纖維板、鋁圓棒與多層模組化艙室結構",
     points: [
       {
@@ -150,7 +150,7 @@ export const structureStages: StructureStage[] = [
   {
     stage: "STAGE 05",
     title: "05 尾翼與推進器固定",
-    image: "/images/rocket-structure/fin-module.png",
+    image: "/images/rocket-structure/fin-module-HD-PNG.png",
     imageAlt: "火箭碳纖維尾翼、鋁製固定環與推進器固定結構",
     points: [
       {
@@ -185,7 +185,7 @@ export const structureStages: StructureStage[] = [
     title: "我們怎麼確認它撐得住？",
     introduction:
       "我們不只設計，也驗證。火箭在圖面上看起來合理，不代表它真的能承受飛行環境；因此我們會透過實體測試與工程分析，確認結構面對約 9G、0.9 Ma、衝擊與震動時的表現。",
-    image: "/images/rocket-structure/rocket-full.png",
+    image: "/images/rocket-structure/rocket-full-pink-hd.png",
     imageAlt: "火箭整體結構圖，用於說明結構測試與工程分析",
     points: [
       {

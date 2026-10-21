@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   AnimatePresence,
   motion,
@@ -24,7 +24,7 @@ const overview = {
   title: "從外殼到尾翼，每一段都有自己的任務。",
   description:
     "整支火箭由鼻錐、箭身、連接段、酬載段與尾翼模組組成。設計時除了考慮飛行時的結構受力，也必須讓航電、酬載與回收系統能被可靠固定，同時維持整體重量與空氣動力表現。",
-  image: "/images/rocket-structure/rocket-full.png",
+  image: "/images/rocket-structure/rocket-full-pink-hd.png",
   imageAlt: "火箭從鼻錐、箭身、酬載段到尾翼模組的完整結構外觀",
 };
 
@@ -763,13 +763,13 @@ function ExplodedRocketVisual({
   const parts = [
     {
       key: "nose" as const,
-      src: "/images/rocket-structure/nose-cone.png",
+      src: "/images/rocket-structure/nose-cone-hd-v2.png",
       alt: "3D 列印 PLA 鼻錐與內部降落傘釋放裝置",
       label: "鼻錐與連接段",
     },
     {
       key: "payload" as const,
-      src: "/images/rocket-structure/payload-module.png",
+      src: "/images/rocket-structure/payload-module-hd-v2.png",
       alt: "以碳纖維板與鋁圓棒製作的多層模組化酬載段",
       label: "模組化酬載段",
     },
@@ -781,7 +781,7 @@ function ExplodedRocketVisual({
     },
     {
       key: "fin" as const,
-      src: "/images/rocket-structure/fin-module.png",
+      src: "/images/rocket-structure/fin-module-HD-PNG.png",
       alt: "碳纖維尾翼、鋁製固定環與推進器固定模組",
       label: "尾翼與推進器固定",
     },
@@ -810,7 +810,13 @@ function ExplodedRocketVisual({
             transition={fullRocketTransition}
             className="absolute inset-0 will-change-transform"
           >
-            <PartImage src={overview.image} alt={overview.imageAlt} label="完整火箭" />
+            <PartImage
+              src={overview.image}
+              alt={overview.imageAlt}
+              label="完整火箭"
+              unoptimized
+              highDetail
+            />
           </motion.div>
 
           <motion.div
@@ -860,6 +866,8 @@ function ExplodedRocketVisual({
           const anchor = rocketAnchors[part.key];
           const state = getPartState(part.key);
           const isActive = activeFrame === partFrames[part.key];
+          const highDetail =
+            part.key === "avionics" || part.key === "nose" || part.key === "payload" || part.key === "fin";
 
           return (
             <motion.div
@@ -921,7 +929,7 @@ function ExplodedRocketVisual({
                     : partTransition
                 }
                 className={`relative h-full w-full ${
-                  part.key === "avionics" ? "" : "will-change-transform"
+                  highDetail ? "" : "will-change-transform"
                 }`}
               >
                 <PartImage
@@ -933,8 +941,9 @@ function ExplodedRocketVisual({
                       ? "(min-width: 1536px) 550px, (min-width: 1280px) 480px, (min-width: 1024px) 42vw, 90vw"
                       : undefined
                   }
-                  unoptimized={part.key === "avionics"}
-                  highDetail={part.key === "avionics"}
+                  // Preserve engineering details without downsampling or a scaled shadow layer.
+                  unoptimized={highDetail}
+                  highDetail={highDetail}
                 />
                 {part.key === "avionics" ? <AvionicsLabels active={isActive} /> : null}
               </motion.div>
@@ -1026,7 +1035,7 @@ function StaticStages() {
   );
 }
 
-export default function RocketStructureSection() {
+export default function RocketStructureSection({ introduction }: { introduction?: ReactNode }) {
   const scrollSectionRef = useRef<HTMLDivElement>(null);
   const activeFrameRef = useRef(0);
   const shouldReduceMotion = useReducedMotion();
@@ -1058,6 +1067,7 @@ export default function RocketStructureSection() {
       id="rocket-structure"
       className="relative z-10 scroll-mt-8 border-t border-white/10 bg-slate-950/65"
     >
+      {introduction ?? (
       <div className="px-5 pb-10 pt-24 sm:px-8 sm:pb-12 sm:pt-28 lg:px-12 lg:pb-16 lg:pt-36">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
@@ -1106,6 +1116,8 @@ export default function RocketStructureSection() {
           </div>
         </div>
       </div>
+
+      )}
 
       <div
         className={

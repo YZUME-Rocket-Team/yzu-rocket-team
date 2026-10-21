@@ -1,6 +1,17 @@
-# 2026 火箭 3D 展示
+# 2026 火箭 3D 展示（封存元件）
 
-展示位於 `/journey-2026` 原有火箭結構介紹之前，載入 `public/models/Rocket_Web.glb`。原有圖文、酬載小船、航電展示及影片均保留，GLB 檔案不需修改。
+標題為「從整體，看見每一個結構」的 `RocketModelSection` 已從 `/journey-2026` 移除引用及頁面實例。目前沒有路由或其他元件掛載它；舊展示、進度滑桿及專屬 `360svh` 捲動容器均不會出現在頁面上。
+
+舊元件、專用 CSS、Three.js viewer／animation 實作與 `public/models/Rocket_Web.glb` 保留供未來使用。專用 CSS 僅由未掛載的元件匯入，不是全域樣式，也不會替目前頁面保留空間。以下元件與模型說明屬於封存實作，不代表現行頁面啟用了這套展示。
+
+## 目前 02 章節保留的動畫
+
+現行頁面使用 `components/RocketStructureSection.tsx`，STAGE 00 標題為「從外殼到尾翼，每一段都有自己的任務。」；它與上述 GLB 展示為兩套獨立實作。
+
+- 保留左側 STAGE 00～06、中央火箭與零件、右側技術介紹，以及原有捲動與發射／Logo 動畫。
+- 桌機 `420vh` 外層與 `sticky top-0 h-screen` 容器是七階段動畫的有效捲動區，不能當作舊展示的殘留空白刪除或縮短。全頁截圖可能無法完整呈現 sticky 畫面，應實際逐段捲動確認。
+- 手機／平板（小於 `lg`）沿用七階段靜態卡片；偏好減少動態效果時也使用靜態卡片，並隱藏桌機長捲動區。
+- 此章節結束後直接接續 `#the-finals`（03「決賽現場」），中間沒有另外掛載舊 3D 元件或佔位區塊。
 
 ## 元件與套件
 
@@ -10,7 +21,7 @@
 - `components/rocket-model/animation.ts`：單一 AnimationMixer，同步定位所有動畫 clips。
 - 執行依賴：`three@0.186.1`；開發型別依賴：`@types/three@0.186.0`。不需要 React Three Fiber 或額外的動畫套件。
 
-頁面仍為 Server Component。Three.js 僅在 client effect 內、展示區接近視窗時動態匯入。WebGL renderer 不會在 SSR 階段建立。
+此封存元件若重新掛載，頁面仍可保持 Server Component；Three.js 僅在 client effect 內、展示區接近視窗時動態匯入，WebGL renderer 不會在 SSR 階段建立。目前頁面未掛載此元件，因此不會啟動這段模型載入流程。
 
 ## 已核對的模型結構
 
@@ -50,7 +61,9 @@ GLB 為 glTF 2.0，大小 5,024,976 bytes，包含 90 個 mesh、1 個金屬材�
 - WebGL 2 不可用、context lost 或下載失敗時顯示靜態圖片與重試按鈕，縮短區域；原有介紹可繼續閱讀。
 - 離開頁面或重試時取消下載、移除 observers／事件／待執行的動畫幀，停止並釋放 mixer、geometry、material、texture、環境光 render target 及 renderer。解析完成前已離開的模型結果也會釋放。
 
-## 本機確認方式
+## 封存元件的本機確認方式（僅供未來重新掛載後使用）
+
+下列步驟針對舊 GLB 展示，目前 `/journey-2026` 不會顯示這個區塊；不能以找不到舊標題或滑桿判定現行 STAGE 00～06 動畫缺失。
 
 1. 使用 `npm ci`，接著執行 `npm run dev`，開啟 `http://localhost:3000/journey-2026`。PowerShell 若封鎖 `npm.ps1`，可使用 `npm.cmd`。
 2. 向下捲至「從整體，看見每一個結構」，確認先顯示完整火箭，載入時有提示。
