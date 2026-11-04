@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import DonationFlowProvider from "@/components/DonationFlowProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,9 +14,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-Hant">
       <body>
-        <Navbar />
-        {children}
-        <Footer />
+        <DonationFlowProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </DonationFlowProvider>
       </body>
     </html>
   );

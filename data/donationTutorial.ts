@@ -5,7 +5,7 @@ export type DonationTutorialStep = {
   copyText?: string;
 };
 
-export const donationPurpose = "火大的元件經費贊助";
+export const donationPurpose = "指定元智大學機械工程學系火箭隊參與台灣盃火箭競賽之研發、製作、測試及參賽相關經費專用。";
 
 // 保留使用者提供的實際檔名（目前為 .png.png）；替換截圖時同步更新路徑與尺寸。
 export const donationTutorialSteps: readonly DonationTutorialStep[] = [
@@ -17,7 +17,7 @@ export const donationTutorialSteps: readonly DonationTutorialStep[] = [
   {
     title: "選擇指定捐款",
     description: `在捐款類別勾選「指定捐款」，並於指定用途輸入「${donationPurpose}」。`,
-    image: { src: "/images/donation-guide/step-2-purpose.png.png", alt: "選擇指定捐款與填寫指定用途的教學截圖", width: 1249, height: 429 },
+    image: { src: "/images/donation-guide/donation-step-02.png.png", alt: "選擇指定捐款與填寫指定用途的教學截圖", width: 841, height: 277 },
     copyText: donationPurpose,
   },
   {

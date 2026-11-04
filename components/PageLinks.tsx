@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 
 import DonationTutorialModal from "@/components/DonationTutorialModal";
+import DonationAction from "@/components/DonationAction";
 import { officialDonationUrl } from "@/data/siteContent";
 
 const pageSequence = [
@@ -107,11 +108,8 @@ function PortalCard({
     return (
       <div className={`${cardClassName} flex-col items-start`}>
         {background}
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${label}（開啟新分頁）`}
+        <DonationAction
+          aria-label={label}
           className={`absolute inset-0 z-10 rounded-[2rem] ${focusClassName}`}
         />
         {text}

@@ -48,6 +48,8 @@ export default function Navbar() {
 
   useEffect(() => {
     const closeOutside = (event: PointerEvent) => {
+      // 提醒視窗位於共用版型；操作它時保留底層教學及行動選單的狀態。
+      if (document.querySelector("dialog[open]")) return;
       setHasKeyboardFocus(false);
       if (!headerRef.current?.contains(event.target as Node)) {
         setIsMenuOpen(false);

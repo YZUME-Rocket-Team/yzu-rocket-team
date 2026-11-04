@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import DonationTutorialModal from "@/components/DonationTutorialModal";
-import { officialDonationUrl } from "@/data/siteContent";
+import DonationAction from "@/components/DonationAction";
 
 export default function SupportMenu({ mobile = false, onActiveChange }: {
   mobile?: boolean;
@@ -89,7 +89,7 @@ export default function SupportMenu({ mobile = false, onActiveChange }: {
         <div className="min-h-0 overflow-hidden">
           <div className={`rounded-2xl border border-white/10 bg-[#0b1422] p-2 shadow-xl ${mobile ? "mt-2" : ""}`}>
             <button ref={firstItemRef} type="button" className={itemStyle} onClick={() => { setOpen(false); setShowTutorial(true); }}>查看捐款教學</button>
-            <a href={officialDonationUrl} target="_blank" rel="noopener noreferrer" onClick={() => { setOpen(false); triggerRef.current?.focus({ preventScroll: true }); }} className={itemStyle}>前往募款網站<span aria-hidden="true"> ↗</span><span className="sr-only">（開啟新分頁）</span></a>
+            <DonationAction returnFocusRef={triggerRef} onClick={() => setOpen(false)} className={itemStyle}>前往募款網站<span aria-hidden="true"> ↗</span></DonationAction>
           </div>
         </div>
       </div>

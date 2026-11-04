@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { officialDonationUrl } from "@/data/siteContent";
+import DonationAction from "@/components/DonationAction";
 
 const footerLinks = [
   { href: "/competition", label: "賽事簡介" },
@@ -24,12 +25,12 @@ export default function Footer() {
           </p>
         </div>
         <nav aria-label="頁尾導覽" className="flex max-w-2xl flex-wrap gap-x-5 gap-y-3">
-          {footerLinks.map((link) => (
+          {footerLinks.map((link) => link.href === officialDonationUrl ? (
+            <DonationAction key={link.href} className="text-sm text-slate-400 transition hover:text-orange-300">{link.label}</DonationAction>
+          ) : (
             <Link
               key={link.href}
               href={link.href}
-              target={link.href === officialDonationUrl ? "_blank" : undefined}
-              rel={link.href === officialDonationUrl ? "noopener noreferrer" : undefined}
               className="text-sm text-slate-400 transition hover:text-orange-300"
             >
               {link.label}
