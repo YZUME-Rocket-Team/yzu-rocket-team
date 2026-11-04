@@ -39,7 +39,7 @@ export default function Plan2027Page() {
           <div className={`${styles.container} ${styles.introLayout}`} data-plan-reveal>
             <h2 id="journey-heading" className={styles.sectionTitle}>從 2026 的成果，<br />走向 2027 的改進。</h2>
             <div className={styles.introCopy}>
-              <p>2026 年，我們投入約 13.9 萬元完成火箭製作與參賽，並在台灣盃火箭競賽學生 3K 組獲得第三名。這個成果來自團隊投入的時間，也來自學校、師長與各界的支持。</p>
+              <p>2026 年，我們投入約 13.5 萬元完成火箭製作與參賽，並在台灣盃火箭競賽學生 3K 組獲得第三名。這個成果來自團隊投入的時間，也來自學校、師長與各界的支持。</p>
               <p>2027 年，我們希望進一步改善火箭結構、航電、遙測與回收系統，並投入更多資源進行地面測試與系統驗證。把每一次的經驗，化為下一次更可靠的飛行。</p>
             </div>
           </div>

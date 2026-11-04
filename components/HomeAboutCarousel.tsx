@@ -20,10 +20,10 @@ const photos = [
     description: "走進真實的發射場，一起迎接飛行任務。",
   },
   {
-    src: "/images/home-about/team-workshop-03.webp.png",
-    alt: "團隊成員在工坊中與製作中的火箭合影",
-    title: "工坊日常",
-    description: "從零件製作到組裝，讓設計逐步成形。",
+    src: "/images/team-photo-03.jpg",
+    alt: "團隊成員在海岸發射場進行火箭地面準備",
+    title: "發射場紀實",
+    description: "從地面準備到現場實踐，記錄每一次邁向天空的努力。",
   },
 ] as const;
 

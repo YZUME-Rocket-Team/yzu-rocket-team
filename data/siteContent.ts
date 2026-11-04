@@ -159,8 +159,8 @@ export const fundingIncome = [
 ] as const;
 
 export const fundingExpenses = [
-  { label: "火箭製作（結構、酬載、航電、回收）", amount: "NT$45,024" },
-  { label: "住宿", amount: "NT$40,000" },
+  { label: "火箭製作（結構、酬載、航電、回收）", amount: "NT$41,019" },
+  { label: "住宿", amount: "NT$40,040" },
   { label: "交通", amount: "NT$35,223" },
   { label: "夥食", amount: "NT$11,895" },
   { label: "報名費", amount: "NT$6,000" },
@@ -168,10 +168,10 @@ export const fundingExpenses = [
 ] as const;
 
 export const expenseBreakdown = [
-  { label: "火箭製作", percentage: 32.5 },
-  { label: "住宿", percentage: 28.9 },
-  { label: "交通", percentage: 25.4 },
-  { label: "其他", percentage: 13.2 },
+  { label: "火箭製作", percentage: 30.5 },
+  { label: "住宿", percentage: 29.8 },
+  { label: "交通", percentage: 26.2 },
+  { label: "其他", percentage: 13.6 },
 ] as const;
 
 export const fundingBudget2027 = [

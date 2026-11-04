@@ -46,6 +46,14 @@ export default function HomeAboutSection() {
       </div>
 
       <ul className={styles.facts} aria-label="團隊標誌與歷年戰績">
+        {[{ year: 2025, category: "學生 1K 組" }, { year: 2026, category: "學生 3K 組" }].map((award) => (
+          <li key={award.year} className={styles.factCard}>
+            <p className={styles.awardYear}><TrophyIcon /><span>{award.year}</span></p>
+            <p className={styles.awardCompetition}>台灣盃火箭競賽</p>
+            <p className={styles.awardCategory}>{award.category}</p>
+            <p className={styles.awardPlace}><LaurelIcon /><strong>第三名</strong><LaurelIcon /></p>
+          </li>
+        ))}
         <li className={`${styles.factCard} ${styles.logoCard}`}>
           <Image
             src="/images/team-logo.png"
@@ -55,14 +63,6 @@ export default function HomeAboutSection() {
             className={styles.logo}
           />
         </li>
-        {[{ year: 2025, category: "學生 1K 組" }, { year: 2026, category: "學生 3K 組" }].map((award) => (
-          <li key={award.year} className={styles.factCard}>
-            <p className={styles.awardYear}><TrophyIcon /><span>{award.year}</span></p>
-            <p className={styles.awardCompetition}>台灣盃火箭競賽</p>
-            <p className={styles.awardCategory}>{award.category}</p>
-            <p className={styles.awardPlace}><LaurelIcon /><strong>第三名</strong><LaurelIcon /></p>
-          </li>
-        ))}
       </ul>
 
       <HomeAboutCarousel />

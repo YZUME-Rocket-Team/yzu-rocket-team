@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, type MouseEvent, type PointerEvent, type RefObject } from "react";
+import { expenseBreakdown, fundingExpenses } from "@/data/siteContent";
 
 import type { PurchaseGroup, PurchaseItem } from "./purchaseDetails";
 import styles from "./PurchaseDetailsModal.module.css";
@@ -10,13 +11,13 @@ const money = (amount: number) => `NT$${amount.toLocaleString("en-US")}`;
 function unitPrice(item: PurchaseItem) {
   if (item.unitPrice === null) return item.status === "sponsored" ? "贊助／未列價" : "單價未定";
   const [integer, fraction] = item.unitPrice.split(".");
-  return `${money(Number(integer))}${fraction === undefined ? "" : `.${fraction}`}`;
+  return `${money(Number(integer))}${fraction === undefined ? "" : `.${fraction}`}${item.status === "sponsored" ? "（贊助）" : ""}`;
 }
 
 function itemAmount(item: PurchaseItem) {
   return item.amount === null
     ? item.status === "sponsored" ? "贊助／未列價" : "金額未定"
-    : money(item.amount);
+    : `${money(item.amount)}${item.status === "sponsored" ? "（贊助）" : ""}`;
 }
 
 export default function PurchaseDetailsModal({ group, onClose, returnFocusRef }: {
@@ -102,18 +103,18 @@ export default function PurchaseDetailsModal({ group, onClose, returnFocusRef }:
         <header className={styles.header}>
           <div className={styles.headerRow}>
             <div>
-              <p className={styles.eyebrow}>計畫採購明細</p>
+              <p className={styles.eyebrow}>採購明細</p>
               <h2 ref={titleRef} tabIndex={-1} id={`${id}-title`} className={styles.title}>{group.label}｜採購明細</h2>
             </div>
             <button ref={closeButtonRef} type="button" onClick={onClose} className={styles.closeButton} aria-label={`關閉${group.label}採購明細`}>×</button>
           </div>
-          <p id={`${id}-description`} className={styles.description}>原始資料標示 Planned Purchase Items (TBD)，不代表所有項目均已完成採購或付款。</p>
+          <p id={`${id}-description`} className={styles.description}>依團隊提供的採購表列示品項、購買來源、數量與金額。</p>
           <p className={styles.meta}>共 {group.items.length} 筆明細 · 金額單位：新臺幣</p>
         </header>
 
         <div ref={scrollAreaRef} className={styles.scrollArea} tabIndex={0} role="region" aria-label={`${group.label}採購明細，可捲動查看`}>
           <table className={styles.table}>
-            <caption className="sr-only">{group.label}計畫採購明細，金額單位為新臺幣</caption>
+            <caption className="sr-only">{group.label}採購明細，金額單位為新臺幣</caption>
             <colgroup><col className={styles.nameColumn} /><col className={styles.sourceColumn} /><col className={styles.quantityColumn} /><col /><col /></colgroup>
             <thead><tr><th scope="col">採購品項</th><th scope="col">購買來源</th><th scope="col">數量與單位</th><th scope="col">單價</th><th scope="col">項目金額</th></tr></thead>
             <tbody>
@@ -125,7 +126,7 @@ export default function PurchaseDetailsModal({ group, onClose, returnFocusRef }:
             </tbody>
           </table>
 
-          <ol className={styles.mobileList} aria-label={`${group.label}計畫採購品項`}>
+          <ol className={styles.mobileList} aria-label={`${group.label}採購品項`}>
             {group.items.map((item, index) => (
               <li key={`${group.id}-${index}`} className={styles.mobileItem}>
                 <h3><span>{String(index + 1).padStart(2, "0")}</span>{item.name}</h3>
@@ -146,10 +147,10 @@ export default function PurchaseDetailsModal({ group, onClose, returnFocusRef }:
               <div><dt>已列價品項加總</dt><dd>{money(pricedTotal)}</dd></div>
             </dl>
             {group.subtotalNeedsReview && <p>原始表格小計與逐項加總相差 {money(Math.abs(pricedTotal - group.originalSubtotal))}，差異原因尚未確認，全部原始品項與金額均予保留。</p>}
-            {group.items.some((item) => item.status === "sponsored") && <p>已列價品項加總不含贊助／未列價材料；未列價不代表零元採購。</p>}
+            {group.items.some((item) => item.status === "sponsored") && <p>贊助項目依原始表格列為 NT$0，並標示為贊助。</p>}
             {group.note && <p>{group.note}</p>}
           </section>
-          <p className={styles.scopeNote}>以上為計畫採購資料，不一定涵蓋火箭製作的全部實際支出；火箭製作總支出仍為 NT$45,024（32.5%）。</p>
+          <p className={styles.scopeNote}>以上明細依團隊提供的採購表列示；火箭製作總支出為 {fundingExpenses[0].amount}（{expenseBreakdown[0].percentage}%）。</p>
         </div>
       </div>
     </dialog>

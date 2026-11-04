@@ -3,7 +3,7 @@
 import { Fragment, useRef, useState, type PointerEvent } from "react";
 
 import PurchaseDetailsModal from "./PurchaseDetailsModal";
-import { plannedPurchaseGroups, type PurchaseGroup } from "./purchaseDetails";
+import { purchaseGroups, type PurchaseGroup } from "./purchaseDetails";
 import styles from "./budget.module.css";
 
 type BudgetSegment = {
@@ -196,7 +196,7 @@ export default function BudgetChartCard({
                     <dd id={panelId} role="region" aria-labelledby={triggerId} className={styles.accordionPanel}>
                       <div className={styles.accordionInner}>
                         <ul className={styles.subcategories}>
-                          {plannedPurchaseGroups.map((group) => (
+                          {purchaseGroups.map((group) => (
                             <li key={group.id}>
                               <button
                                 type="button"
