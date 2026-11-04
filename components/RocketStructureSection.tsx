@@ -426,6 +426,48 @@ function StageDetails({ stage, compact = false }: { stage: StructureStage; compa
   );
 }
 
+function PayloadBoatLabels({
+  active = true,
+  compact = false,
+}: {
+  active?: boolean;
+  compact?: boolean;
+}) {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10">
+      {payloadBoatLabels.map((label, index) => (
+        <motion.div
+          key={label.id}
+          initial={false}
+          animate={{ opacity: active ? 1 : 0, y: active ? 0 : 8 }}
+          transition={{
+            duration: active ? 0.3 : 0.22,
+            delay: active && !compact ? 0.68 + index * 0.06 : 0,
+            ease: "easeOut",
+          }}
+          className="absolute whitespace-nowrap font-mono [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]"
+          style={{ left: `${label.x}%`, top: `${label.y}%` }}
+        >
+          <div className={`flex items-center ${compact ? "gap-1 sm:gap-2" : "gap-2"}`}>
+            <span
+              aria-hidden="true"
+              className={`h-0.5 shrink-0 rounded-full ${compact ? "w-2 sm:w-4" : "w-4"}`}
+              style={{ backgroundColor: label.accent }}
+            />
+            <h4
+              className={`font-bold leading-tight text-white ${
+                compact ? "text-xs sm:text-base" : "text-base xl:text-lg"
+              }`}
+            >
+              {label.title}
+            </h4>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
 function PayloadBoatOverviewLayer({ activeFrame }: { activeFrame: number }) {
   const isActive = activeFrame === 3;
   const { anchor, focus } = payloadBoatOverview;
@@ -487,36 +529,7 @@ function PayloadBoatOverviewLayer({ activeFrame }: { activeFrame: number }) {
           unoptimized
         />
 
-        <div aria-hidden="true" className="absolute inset-0 z-10">
-          {payloadBoatLabels.map((label, index) => (
-            <motion.div
-              key={label.id}
-              initial={false}
-              animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 8 }}
-              transition={{
-                duration: isActive ? 0.3 : 0.22,
-                delay: isActive ? 0.68 + index * 0.06 : 0,
-                ease: "easeOut",
-              }}
-              className="absolute whitespace-nowrap font-mono [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]"
-              style={{
-                left: `${label.x}%`,
-                top: `${label.y}%`,
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className="h-0.5 w-4 shrink-0 rounded-full"
-                  style={{ backgroundColor: label.accent }}
-                />
-                <h4 className="text-base font-bold leading-tight text-white xl:text-lg">
-                  {label.title}
-                </h4>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        <PayloadBoatLabels active={isActive} />
       </motion.div>
     </motion.div>
   );
@@ -1020,6 +1033,12 @@ function StaticStages() {
               unoptimized={stage.stage === "STAGE 03"}
               className={stage.stage === "STAGE 03" ? "object-contain p-2 sm:p-4" : undefined}
             />
+            {stage.stage === "STAGE 03" ? (
+              // Match the contained image's intrinsic ratio and padding, not the card's ratio.
+              <div className="pointer-events-none absolute inset-x-2 top-1/2 aspect-[1672/941] -translate-y-1/2 sm:inset-x-4">
+                <PayloadBoatLabels compact />
+              </div>
+            ) : null}
             {stage.stage === "STAGE 04" ? (
               <div className="pointer-events-none absolute inset-y-5 left-1/2 aspect-[1247/1261] -translate-x-1/2 sm:inset-y-8">
                 <AvionicsLabels />
