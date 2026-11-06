@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import SupportMenu from "@/components/SupportMenu";
+import TeamLogo from "@/components/TeamLogo";
 
 const navigation = [
   { label: "首頁", href: "/" },
@@ -169,12 +170,7 @@ export default function Navbar() {
           onClick={handleNavigation}
           className="flex w-fit items-center gap-3 text-lg font-black tracking-tight text-white"
         >
-          <span
-            aria-hidden="true"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-orange-400/50 bg-orange-500/10 text-orange-400"
-          >
-            ▲
-          </span>
+          <TeamLogo width={44} height={44} sizes="44px" className="h-11 w-11 shrink-0" />
           火大的元件
         </Link>
 

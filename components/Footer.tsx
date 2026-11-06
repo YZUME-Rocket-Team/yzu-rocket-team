@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { officialDonationUrl } from "@/data/siteContent";
 import DonationAction from "@/components/DonationAction";
+import TeamLogo from "@/components/TeamLogo";
 
 const footerLinks = [
   { href: "/competition", label: "賽事簡介" },
@@ -17,7 +18,8 @@ export default function Footer() {
     <footer className="border-t border-white/10 bg-[#030711] px-5 py-10 sm:px-8 lg:px-12">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <Link href="/" className="text-xl font-black text-white">
+          <Link href="/" className="flex w-fit items-center gap-3 text-xl font-black text-white">
+            <TeamLogo width={56} height={56} sizes="56px" className="h-14 w-14 shrink-0" />
             火大的元件
           </Link>
           <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500">

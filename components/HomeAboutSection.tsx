@@ -1,4 +1,4 @@
-import Image from "next/image";
+import TeamLogo from "@/components/TeamLogo";
 
 import HomeAboutCarousel from "@/components/HomeAboutCarousel";
 import styles from "./HomeAboutSection.module.css";
@@ -55,9 +55,7 @@ export default function HomeAboutSection() {
           </li>
         ))}
         <li className={`${styles.factCard} ${styles.logoCard}`}>
-          <Image
-            src="/images/team-logo.png"
-            alt="火大的元件團隊 LOGO，含中文名稱與 YZUME"
+          <TeamLogo
             fill
             sizes="(min-width: 1200px) 200px, (min-width: 640px) 240px, 160px"
             className={styles.logo}

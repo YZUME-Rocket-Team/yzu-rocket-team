@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import TeamLogo from "@/components/TeamLogo";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   AnimatePresence,
@@ -979,9 +980,7 @@ function ExplodedRocketVisual({
         }
       >
         <div className="relative aspect-square w-[52%] drop-shadow-[0_0_28px_rgba(249,115,22,0.16)]">
-          <Image
-            src="/images/team-logo.png"
-            alt="火大的元件團隊 Logo"
+          <TeamLogo
             fill
             sizes="(min-width: 1280px) 28vw, 30vw"
             className="object-contain"
