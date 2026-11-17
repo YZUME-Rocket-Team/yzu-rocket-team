@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/seo";
 import Image from "next/image";
 
 import PageLinks from "@/components/PageLinks";
@@ -10,10 +10,7 @@ import PlanIcon from "./PlanIcon";
 import PlanReveal from "./PlanReveal";
 import styles from "./plan.module.css";
 
-export const metadata: Metadata = {
-  title: "2027 計畫｜火大的元件",
-  description: "從 2026 的實戰經驗出發，了解火大的元件 2027 四大升級方向、20 萬元建議預算與台灣盃火箭競賽官方時程。",
-};
+export const metadata = createPageMetadata("/plan-2027");
 
 export default function Plan2027Page() {
   return (

@@ -1,13 +1,11 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/seo";
 import Image from "next/image";
 
 import PageLinks from "@/components/PageLinks";
 import TeamDivisionSection from "@/components/TeamDivisionSection";
 import HomeAboutSection from "@/components/HomeAboutSection";
 
-export const metadata: Metadata = {
-  title: "火大的元件｜元智大學學生火箭團隊",
-};
+export const metadata = createPageMetadata("/");
 
 export default function Home() {
   return (

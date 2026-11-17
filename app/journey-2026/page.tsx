@@ -1,14 +1,11 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/seo";
 import Image from "next/image";
 
 import PageLinks from "@/components/PageLinks";
 import RocketStructureSection from "@/components/RocketStructureSection";
 import styles from "./journey.module.css";
 
-export const metadata: Metadata = {
-  title: "2026 經歷｜火大的元件",
-  description: "從設計審查到決賽發射，記錄火大的元件參與第二屆台灣盃火箭競賽、獲得學生 3K 組第三名的經歷。",
-};
+export const metadata = createPageMetadata("/journey-2026");
 
 const milestones = [
   { title: "初審", description: "通過任務計畫書審查" },

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/seo";
 
 import PageLinks from "@/components/PageLinks";
 import { fundingExpenses, fundingIncome } from "@/data/siteContent";
@@ -6,7 +6,7 @@ import { fundingExpenses, fundingIncome } from "@/data/siteContent";
 import BudgetChartCard from "./BudgetChartCard";
 import styles from "./budget.module.css";
 
-export const metadata: Metadata = { title: "經費總結｜火大的元件" };
+export const metadata = createPageMetadata("/budget");
 
 const chartColors = ["#ff7900", "#ffab39", "#ffc18b", "#ffe5c8", "#ffda58"];
 const currencyFormatter = new Intl.NumberFormat("en-US");

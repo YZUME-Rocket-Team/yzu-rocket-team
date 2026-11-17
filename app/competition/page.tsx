@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/seo";
 import Image from "next/image";
 
 import PageLinks from "@/components/PageLinks";
 import { competitionFacts } from "@/data/siteContent";
 
-export const metadata: Metadata = { title: "賽事簡介｜火大的元件" };
+export const metadata = createPageMetadata("/competition");
 
 const processIconPaths = {
   "01": "m12 3 9 5v8l-9 5-9-5V8l9-5Zm0 9 9-4M12 12 3 8m9 4v9M7.5 5.5l9 5",
