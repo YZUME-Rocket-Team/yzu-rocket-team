@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import DonationFlowProvider from "@/components/DonationFlowProvider";
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <Footer />
         </DonationFlowProvider>
+        <Analytics />
       </body>
     </html>
   );
