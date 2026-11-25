@@ -1,12 +1,7 @@
-import { createPageMetadata } from "@/lib/seo";
-
-import PageLinks from "@/components/PageLinks";
 import { fundingExpenses, fundingIncome } from "@/data/siteContent";
 
 import BudgetChartCard from "./BudgetChartCard";
 import styles from "./budget.module.css";
-
-export const metadata = createPageMetadata("/budget");
 
 const chartColors = ["#ff7900", "#ffab39", "#ffc18b", "#ffe5c8", "#ffda58"];
 const currencyFormatter = new Intl.NumberFormat("en-US");
@@ -68,19 +63,16 @@ function BudgetCard({
   );
 }
 
-export default function BudgetPage() {
+export default function BudgetSummary() {
+  const balance = sumAmounts(incomeItems) - sumAmounts(originalExpenses);
+
   return (
-    <main className={styles.page}>
-      <div className={styles.container}>
-        <h1 className={styles.pageTitle}>2026 經費總結</h1>
-        <div className={styles.cards}>
-          <BudgetCard id="income" title="2026 收入" totalLabel="總收入" items={incomeItems} />
-          <BudgetCard id="expenses" title="2026 支出" totalLabel="總支出" items={expenseItems} />
-        </div>
-        <div className={styles.pageNavigation}>
-          <PageLinks compact />
-        </div>
+    <div className={styles.summary}>
+      <div className={styles.cards}>
+        <BudgetCard id="income" title="2026 收入" totalLabel="總收入" items={incomeItems} />
+        <BudgetCard id="expenses" title="2026 支出" totalLabel="總支出" items={expenseItems} />
       </div>
-    </main>
+      <p className={styles.balance}>本年度結餘 <strong>{formatCurrency(balance)}</strong></p>
+    </div>
   );
 }

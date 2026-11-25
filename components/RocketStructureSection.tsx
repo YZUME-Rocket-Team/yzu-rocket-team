@@ -1083,7 +1083,7 @@ export default function RocketStructureSection({ introduction }: { introduction?
   return (
     <section
       id="rocket-structure"
-      className="relative z-10 scroll-mt-8 border-t border-white/10 bg-slate-950/65"
+      className="relative z-10 scroll-mt-8 bg-[var(--journey-bg,#050b14)]"
     >
       {introduction ?? (
       <div className="px-5 pb-10 pt-24 sm:px-8 sm:pb-12 sm:pt-28 lg:px-12 lg:pb-16 lg:pt-36">
@@ -1153,7 +1153,7 @@ export default function RocketStructureSection({ introduction }: { introduction?
         ref={scrollSectionRef}
         className={shouldReduceMotion ? "hidden" : "relative hidden h-[420vh] lg:block"}
       >
-        <div className="sticky top-0 h-screen overflow-hidden border-y border-white/10 bg-[#050b14] px-7 py-7 xl:px-12">
+        <div className="sticky top-0 h-screen overflow-hidden bg-[var(--journey-bg,#050b14)] px-7 py-7 xl:px-12">
           <div aria-hidden="true" className="hero-grid absolute inset-0 opacity-45" />
           <div
             aria-hidden="true"

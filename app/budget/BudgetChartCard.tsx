@@ -49,6 +49,7 @@ export default function BudgetChartCard({
   const legendButtons = useRef<(HTMLButtonElement | null)[]>([]);
   const detailsSegment = detailsIndex === null ? undefined : segments[detailsIndex];
   const activeIndex = detailsIndex ?? hoveredIndex ?? focusedIndex ?? lockedIndex;
+  const Heading = embedded ? "h2" : "h3";
 
   function preview(event: PointerEvent, index: number) {
     if (event.pointerType === "mouse"
@@ -85,7 +86,7 @@ export default function BudgetChartCard({
         }
       }}
     >
-      <h2 id={`${id}-heading`} className={embedded ? "sr-only" : styles.cardTitle}>{title}</h2>
+      <Heading id={`${id}-heading`} className={embedded ? "sr-only" : styles.cardTitle}>{title}</Heading>
       <div
         className={styles.cardContent}
         onPointerLeave={(event) => {

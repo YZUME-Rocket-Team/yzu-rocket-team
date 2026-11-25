@@ -8,7 +8,7 @@ const footerLinks = [
   { href: "/competition", label: "賽事簡介" },
   { href: "/#about", label: "關於我們" },
   { href: "/journey-2026", label: "2026 經歷" },
-  { href: "/budget", label: "經費總結" },
+  { href: "/journey-2026#budget", label: "經費總結" },
   { href: "/plan-2027", label: "2027 計畫" },
   { href: officialDonationUrl, label: "支持我們" },
 ] as const;

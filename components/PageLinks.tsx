@@ -13,7 +13,6 @@ const pageSequence = [
   { href: "/", label: "首頁" },
   { href: "/competition", label: "賽事簡介" },
   { href: "/journey-2026", label: "2026 經歷" },
-  { href: "/budget", label: "經費總結" },
   { href: "/plan-2027", label: "2027 計畫" },
 ] as const;
 
@@ -133,7 +132,7 @@ function PortalCard({
   );
 }
 
-export default function PageLinks({ compact = false, nextLabel }: { compact?: boolean; nextLabel?: string }) {
+export default function PageLinks({ compact = false }: { compact?: boolean }) {
   const pathname = usePathname();
   const [showTutorial, setShowTutorial] = useState(false);
   const tutorialButtonRef = useRef<HTMLButtonElement>(null);
@@ -157,7 +156,7 @@ export default function PageLinks({ compact = false, nextLabel }: { compact?: bo
     cards.push({
       direction: "next",
       href: nextPage.href,
-      label: nextLabel ?? nextPage.label,
+      label: nextPage.label,
     });
   } else {
     cards.push({

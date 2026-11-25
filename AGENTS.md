@@ -54,8 +54,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 | `app/page.tsx` | `/`：首頁、團隊定位與各頁入口 |
 | `app/competition/page.tsx` | `/competition`：賽事簡介 |
 | `app/about/page.tsx` | `/about`：團隊介紹 |
-| `app/journey-2026/page.tsx` | `/journey-2026`：成果、工程展示、發射影片與火箭結構互動 |
-| `app/budget/page.tsx` | `/budget`：2026 收支與比例 |
+| `app/journey-2026/page.tsx` | `/journey-2026`：成果、工程展示、發射影片、火箭結構互動與 2026 經費總結 |
+| `app/budget/` | 2026 收支章節及 2027 共用的圖表與明細元件。舊網址 `/budget` 由 `next.config.ts` 永久轉址至 `/journey-2026#budget` |
 | `app/plan-2027/page.tsx` | `/plan-2027`：改進方向、募款目標與建議預算 |
 | `components/` | `Navbar`、`Footer`、`PageHeader`、`PageLinks`、`RocketStructureSection` |
 | `data/siteContent.ts` | 共用文案、導頁資料、經費陣列與官方捐款網址 |

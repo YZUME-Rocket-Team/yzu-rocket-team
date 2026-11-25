@@ -49,7 +49,7 @@
 .qualifierFigure figcaption, .flightFigure figcaption { padding-top: .75rem; color: #9aaabe; font-size: .75rem; line-height: 1.7; letter-spacing: .025em; }
 .qualifierFigure figcaption span { color: var(--journey-orange); }
 
-.finals { position: relative; isolation: isolate; padding-block: 3rem 2rem; background: #030c15; }
+.finals { position: relative; isolation: isolate; padding-block: 3rem 2rem; }
 .finalsGrid { display: grid; gap: 2rem; }
 .finalsPhoto { position: relative; aspect-ratio: 3 / 4; background: #0a1623; border-radius: .5rem; overflow: hidden; }
 .flightFigure { min-width: 0; }
@@ -57,10 +57,15 @@
 .videoLabel { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid #ffffff14; background: #0a1420; padding: .85rem 1rem; color: #a6b6c8; font: 500 .6rem/1.5 monospace; letter-spacing: .14em; }
 .recordDot { width: .35rem; height: .35rem; background: var(--journey-orange); border-radius: 50%; }
 .launchVideo { display: block; width: 100%; height: auto; max-height: 78svh; aspect-ratio: 9 / 16; background: #000; object-fit: contain; }
-.result { padding-block: 3rem; }
 .topThree { margin-block: -.2rem .4rem; color: #ff9a52; font-size: clamp(4.6rem, 10vw, 8.8rem); font-weight: 900; font-style: italic; line-height: 1.1; letter-spacing: -.06em; text-shadow: 0 0 28px #f9731624; white-space: nowrap; }
 .resultTitle { font-size: clamp(1.65rem, 2.7vw, 2.4rem); }
 .awardPhoto { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: .5rem; border: 1px solid #ffffff1a; background: #0a1623; }
+
+.journey .budget {
+  scroll-margin-top: .5rem;
+  padding-block: 3rem 1.5rem;
+}
+.budgetHeader { margin-bottom: 1.75rem; }
 
 @media (min-width: 640px) {
   .container { width: min(100% - 4rem, 1280px); }
@@ -74,6 +79,7 @@
   .timeline h3 { font-size: 1rem; }
   .timeline p { font-size: .8rem; }
   .qualifier, .result { padding-block: 3.5rem; }
+  .journey .budget { padding-top: 3.5rem; }
   .finalsGrid { grid-template-columns: 1fr 1fr; align-items: start; }
   .finalsCopy { grid-column: 1 / -1; }
   .flightFigure { align-self: end; }

@@ -256,7 +256,7 @@ export const pageLinks = [
     description: "查看發射影片、工程過程與完整的火箭 exploded view。",
   },
   {
-    href: "/budget",
+    href: "/journey-2026#budget",
     eyebrow: "2026 Budget",
     title: "經費從哪裡來、用在哪裡",
     description: "公開 2026 實際收支與參賽成本的組成。",

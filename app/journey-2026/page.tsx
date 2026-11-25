@@ -1,6 +1,7 @@
 import { createPageMetadata } from "@/lib/seo";
 import Image from "next/image";
 
+import BudgetSummary from "@/app/budget/BudgetSummary";
 import PageLinks from "@/components/PageLinks";
 import RocketStructureSection from "@/components/RocketStructureSection";
 import styles from "./journey.module.css";
@@ -141,7 +142,19 @@ export default function Journey2026Page() {
         </div>
       </section>
 
-      <PageLinks compact nextLabel="經費總覽" />
+      <section id="budget" className={styles.budget} aria-labelledby="budget-title">
+        <div className={styles.container}>
+          <header className={styles.budgetHeader}>
+            <ChapterLabel number="05">BUDGET SUMMARY</ChapterLabel>
+            <div className={styles.chapterBody}>
+              <h2 id="budget-title" className={styles.sectionTitle}>2026 經費總結</h2>
+            </div>
+          </header>
+          <BudgetSummary />
+        </div>
+      </section>
+
+      <PageLinks compact />
     </main>
   );
 }

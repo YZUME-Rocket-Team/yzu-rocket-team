@@ -5,7 +5,7 @@ export const siteName = "火大的元件 YZUME";
 // Production origin confirmed by the site owner; never use a preview/request host.
 export const siteUrl = new URL("https://madrocket.tw/");
 
-// Only canonical public pages belong here; /about redirects to /#about.
+// Only canonical public pages belong here.
 export const publicPages = {
   "/": {
     title: "火大的元件 Mad_Rocket｜元智大學火箭團隊官方網站",
@@ -18,14 +18,9 @@ export const publicPages = {
       "認識 2027 台灣盃火箭競賽的學生 1K、學生 3K 與社會 3K 組別，了解從火箭設計、製作、測試到實際發射的完整工程挑戰。",
   },
   "/journey-2026": {
-    title: "2026 火箭研發與參賽成果｜火大的元件 YZUME",
+    title: "2026 火箭研發、參賽成果與經費總結｜火大的元件 YZUME",
     description:
-      "從設計審查到決賽發射，記錄火大的元件參與第二屆台灣盃火箭競賽、獲得學生 3K 組第三名的經歷。",
-  },
-  "/budget": {
-    title: "2026 經費收支總結｜火大的元件 YZUME",
-    description:
-      "公開火大的元件 YZUME 火箭團隊 2026 年實際收入、支出與參賽成本，了解補助及贊助來源，以及火箭製作、交通、住宿等經費用途。",
+      "從設計審查到決賽發射，記錄火大的元件參與第二屆台灣盃火箭競賽、獲得學生 3K 組第三名的經歷，並公開 2026 年實際收支、結餘與採購明細。",
   },
   "/plan-2027": {
     title: "2027 火箭競賽計畫與募款目標｜火大的元件 YZUME",
