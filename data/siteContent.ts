@@ -175,13 +175,65 @@ export const expenseBreakdown = [
 ] as const;
 
 export const fundingBudget2027 = [
-  { number: "01", label: "火箭結構、推進與製作材料", amount: "NT$50,000" },
-  { number: "02", label: "航電、感測與遙測系統", amount: "NT$35,000" },
-  { number: "03", label: "降落傘與回收系統改良", amount: "NT$20,000" },
-  { number: "04", label: "地面測試、耗材與製作", amount: "NT$20,000" },
-  { number: "05", label: "競賽交通", amount: "NT$35,000" },
-  { number: "06", label: "競賽住宿", amount: "NT$30,000" },
-  { number: "07", label: "報名及行政支出", amount: "NT$10,000" },
+  {
+    label: "結構組",
+    color: "#ff8a19",
+    items: [
+      { name: "火箭箭體：碳纖維管、玻璃纖維管", amount: 32000 },
+      { name: "玻璃纖維鼻錐", amount: 2500 },
+      { name: "碳纖維尾翼", amount: 4000 },
+      { name: "金屬材料與固定零件", amount: 700 },
+      { name: "3D列印、黏合與膠帶耗材", amount: 2800 },
+      { name: "噴漆、割字與海報輸出", amount: 1200 },
+    ],
+  },
+  {
+    label: "回收組",
+    color: "#e0a42d",
+    items: [
+      { name: "引導傘、主傘與傘繩", amount: 6700 },
+      { name: "開傘機構與密封耗材", amount: 1900 },
+    ],
+  },
+  {
+    label: "航電組",
+    color: "#ffb675",
+    items: [
+      { name: "控制板與電路配件", amount: 3900 },
+      { name: "衛星定位模組、天線與配件", amount: 5900 },
+      { name: "姿態、電子羅盤與氣壓感測器", amount: 2800 },
+      { name: "無線通訊模組、接收機與天線", amount: 6500 },
+      { name: "記憶卡與SD卡模組", amount: 1600 },
+      { name: "AMB82-mini影像模組", amount: 1000 },
+      { name: "電池與電源模組", amount: 5700 },
+    ],
+  },
+  {
+    label: "酬載組",
+    color: "#fff0aa",
+    items: [
+      { name: "馬達、推進器與驅動設備", amount: 4300 },
+      { name: "酬載船製作耗材", amount: 2300 },
+    ],
+  },
+  {
+    label: "旅費",
+    color: "#ffcf4f",
+    items: [
+      { name: "交通費", amount: 31600 },
+      { name: "住宿費", amount: 40000 },
+      { name: "伙食費", amount: 400 },
+      { name: "保險", amount: 10000 },
+    ],
+  },
+  {
+    label: "雜支",
+    color: "#d27733",
+    items: [
+      { name: "贊助回饋", amount: 10000 },
+      { name: "預備金", amount: 7200 },
+    ],
+  },
 ] as const;
 
 export const pageLinks = [

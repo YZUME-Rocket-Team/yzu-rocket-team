@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { budgetTotal2027, fundingTarget2027 } from "@/data/plan2027";
 
 export const siteName = "火大的元件 YZUME";
 // Production origin confirmed by the site owner; never use a preview/request host.
@@ -29,7 +30,7 @@ export const publicPages = {
   "/plan-2027": {
     title: "2027 火箭競賽計畫與募款目標｜火大的元件 YZUME",
     description:
-      "從 2026 的實戰經驗出發，了解火大的元件 2027 四大升級方向、20 萬元建議預算與台灣盃火箭競賽官方時程。",
+      `從 2026 的實戰經驗出發，了解火大的元件 2027 四大升級方向、${budgetTotal2027 / 10_000} 萬元建議預算、${fundingTarget2027 / 10_000} 萬元募款目標與台灣盃火箭競賽官方時程。`,
   },
 } as const;
 

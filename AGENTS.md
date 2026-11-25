@@ -1,6 +1,6 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
@@ -17,7 +17,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - 與使用者溝通一律使用繁體中文；網站面向台灣使用者，主要內容使用繁體中文。變數、函式與元件名稱可用英文，專業術語可保留英文。
 - 用清楚易懂的方式回報，不假設使用者熟悉程式設計；重要修改須說明原因與可能影響。
 - 本站為元智大學機械工程學系學生火箭團隊「火大的元件（YZUME）」的成果展示與募款網站，服務企業、校友及一般支持者。
-- 現有內容包含 2026 台灣盃火箭競賽學生 3K 組第三名、挑戰 2027 賽事，以及新臺幣 200,000 元募款目標。這些是目前網站內容，不代表已另行查證官方紀錄。
+- 現有內容包含 2026 台灣盃火箭競賽學生 3K 組第三名、挑戰 2027 賽事，以及各自管理的 2027 年總預算與募款目標。這些是目前網站內容，不代表已另行查證官方紀錄。
 - 不得編造競賽成績、工程驗證結果、募款進度、贊助者或已完成的功能。背景資料與程式碼不同時，指出差異並確認需求，不自行補成事實。
 - **使用者擁有網站設計及架構的最終決定權。** 本文件保護一般維護時的既有功能，不將現有風格與架構永久鎖定。使用者本次明確授權的新需求優先於本文件的舊規範，仍須遵守更高優先級的安全與執行限制。
 
@@ -27,7 +27,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 | 技術 | 目前宣告／用途 |
 | --- | --- |
-| Next.js | 16.3.4，App Router |
+| Next.js | 16.4.6，App Router |
 | React / React DOM | 19.2.8 |
 | TypeScript | ^5，啟用 strict；`@/*` 指向專案根目錄 |
 | Tailwind CSS | ^4，透過 `@tailwindcss/postcss` 與 CSS import 使用 |
@@ -42,7 +42,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 | `npm run lint` | 執行 ESLint |
 | `npx tsc --noEmit` | 使用現有 TypeScript 工具檢查型別；不是既有 npm script |
 
-目前沒有 test 或 typecheck script，也未見自動化測試套件與測試檔。不得宣稱存在這些流程。不要任意改用其他套件管理器、重建鎖定檔或升級依賴；桌機與筆電依同一份鎖定檔與指令開發，需安裝時優先使用 `npm ci`。
+目前沒有 test 或 typecheck npm script。募款解析可用 `node --test tests/donation-progress.test.mjs` 執行離線測試。不要任意改用其他套件管理器、重建鎖定檔或升級依賴；桌機與筆電依同一份鎖定檔與指令開發，需安裝時優先使用 `npm ci`。
 
 修改 Next.js 程式前，先閱讀 `node_modules/next/dist/docs/` 中相關版本文件並留意棄用資訊，例如 `01-app/01-getting-started/` 下的 layouts-and-pages、server-and-client-components、css 與 images 指南。保留本文件頂端 Next.js 管理區塊及標記。
 
@@ -62,9 +62,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 | `data/rocketStructure.ts` | 火箭結構階段、工程規格與展示文案 |
 | `app/globals.css` | Tailwind 入口、全域色彩、背景、字體與網格效果 |
 | `public/images/`、`public/videos/` | 團隊及工程圖片、本機發射影片 |
-| `app/icon.svg` | 網站圖示 |
+| `components/TeamLogo.tsx` | 全站共用品牌隊徽，統一引用 `public/images/team_logo.png` |
+| `app/favicon.ico`、`app/icon.png`、`app/apple-icon.png` | 由 `public/images/team_logo.png` 等比例產生的網站與 Apple Touch 圖示 |
 
-- 目前為靜態內容資料搭配互動元件，未見 API route、資料庫、站內付款或即時募款進度系統。遙測畫面是工程成果圖片，不能當成網站即時遙測功能。
+- 目前以靜態內容搭配互動元件為主。2027 募款卡片可設定由伺服器定期讀取校方名錄，預設停用自動擷取，設定見 README。網站未設資料庫或站內付款。遙測畫面是工程成果圖片，不能當成網站即時遙測功能。
 - 優先遵守既有 App Router 路由、metadata 與 Server / Client Component 分工。頁面與版型目前未加 `use client`；Navbar 與火箭互動元件使用 Client Component。
 - 修改前閱讀相關檔案、匯入來源與使用位置；重用共用元件，避免重複程式碼，維持合理拆分與可維護性。
 - 不為局部功能重寫整個專案，不在未理解依賴前刪檔，不擅增不必要套件。

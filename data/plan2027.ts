@@ -7,17 +7,31 @@ export const planGoalMedia = [
   { src: "/images/rocket-assembly.jpg", alt: "團隊於競賽現場組裝火箭並進行檢查", label: "現場組裝與檢查", position: "50% 45%", diagram: false, icon: "chart" },
 ] as const;
 
-const budgetColors = ["#ff7900", "#ffab39", "#ffc18b", "#ffe5c8", "#ffda58", "#e9b554", "#d88b36"] as const;
-
-// Derive the chart and percentages from the existing seven amounts.
-const budgetValues2027 = fundingBudget2027.map((item) => Number(item.amount.replace(/[^\d]/g, "")));
-export const budgetTotal2027 = budgetValues2027.reduce((total, value) => total + value, 0);
-export const planBudget2027 = fundingBudget2027.map((item, index) => {
-  const value = budgetValues2027[index];
-  const offset = budgetValues2027.slice(0, index).reduce((total, previous) => total + previous, 0) / budgetTotal2027 * 100;
-  return { ...item, value, offset, percentage: value / budgetTotal2027 * 100, color: budgetColors[index] };
-});
 export const formatBudgetAmount = (amount: number) => `NT$${amount.toLocaleString("en-US")}`;
+
+const budgetCategories2027 = fundingBudget2027.map((category) => ({
+  ...category,
+  subtotal: category.items.reduce((total, item) => total + item.amount, 0),
+}));
+export const budgetTotal2027 = budgetCategories2027.reduce((total, category) => total + category.subtotal, 0);
+export const fundingTarget2027 = 100_000;
+
+let precedingSubtotal = 0;
+export const planBudget2027 = budgetCategories2027.map(({ label, color, items, subtotal }) => {
+  const fraction = subtotal / budgetTotal2027;
+  const offset = precedingSubtotal / budgetTotal2027;
+  precedingSubtotal += subtotal;
+
+  return {
+    label,
+    color,
+    fraction,
+    offset,
+    formattedAmount: formatBudgetAmount(subtotal),
+    percentage: `${(fraction * 100).toFixed(1)}%`,
+    details: items.map(({ name, amount }) => ({ name, formattedAmount: formatBudgetAmount(amount) })),
+  };
+});
 
 export const calendarSource2027 = {
   url: "https://www.tasa.org.tw/zh-TW/events/detail/20ca1542-ba86-4900-9b59b12361623e33",

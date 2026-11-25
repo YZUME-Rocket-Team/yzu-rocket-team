@@ -2,6 +2,7 @@
 
 import { Fragment, useRef, useState, type PointerEvent } from "react";
 
+import BudgetBreakdownModal, { type BudgetDetailItem } from "./BudgetBreakdownModal";
 import PurchaseDetailsModal from "./PurchaseDetailsModal";
 import { purchaseGroups, type PurchaseGroup } from "./purchaseDetails";
 import styles from "./budget.module.css";
@@ -13,6 +14,7 @@ type BudgetSegment = {
   offset: number;
   formattedAmount: string;
   percentage: string;
+  details?: readonly BudgetDetailItem[];
 };
 
 // An undashed, invisible arc gives each unchanged chart segment its own hit area.
@@ -29,7 +31,6 @@ export default function BudgetChartCard({
   totalAmount,
   segments,
   embedded = false,
-  note,
 }: {
   id: string;
   title: string;
@@ -37,15 +38,17 @@ export default function BudgetChartCard({
   totalAmount: string;
   segments: readonly BudgetSegment[];
   embedded?: boolean;
-  note?: string;
 }) {
   const [lockedIndex, setLockedIndex] = useState<number | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [isRocketExpanded, setIsRocketExpanded] = useState(false);
   const [purchaseGroup, setPurchaseGroup] = useState<PurchaseGroup | null>(null);
-  const purchaseTriggerRef = useRef<HTMLButtonElement | null>(null);
-  const activeIndex = hoveredIndex ?? focusedIndex ?? lockedIndex;
+  const [detailsIndex, setDetailsIndex] = useState<number | null>(null);
+  const dialogTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const legendButtons = useRef<(HTMLButtonElement | null)[]>([]);
+  const detailsSegment = detailsIndex === null ? undefined : segments[detailsIndex];
+  const activeIndex = detailsIndex ?? hoveredIndex ?? focusedIndex ?? lockedIndex;
 
   function preview(event: PointerEvent, index: number) {
     if (event.pointerType === "mouse"
@@ -62,6 +65,12 @@ export default function BudgetChartCard({
     setFocusedIndex(null);
     setHoveredIndex(null);
     setLockedIndex((current) => current === index ? null : index);
+  }
+
+  function openDetails(index: number) {
+    dialogTriggerRef.current = legendButtons.current[index];
+    setHoveredIndex(null);
+    setDetailsIndex(index);
   }
 
   return (
@@ -111,6 +120,7 @@ export default function BudgetChartCard({
                   pointerEvents="none"
                 />
                 <path
+                  className={segment.details ? styles.detailArc : undefined}
                   d={hitArc(segment)}
                   fill="none"
                   stroke="transparent"
@@ -119,7 +129,7 @@ export default function BudgetChartCard({
                   onPointerEnter={(event) => preview(event, index)}
                   onPointerLeave={() => endPreview(index)}
                   onPointerCancel={() => endPreview(index)}
-                  onClick={() => toggleSelection(index)}
+                  onClick={() => segment.details ? openDetails(index) : toggleSelection(index)}
                 />
               </g>
             ))}
@@ -131,26 +141,28 @@ export default function BudgetChartCard({
         </div>
         <dl className={styles.legend} aria-label={`${title}分類資料`}>
           {segments.map((segment, index) => {
-            const hasRocketDetails = id === "expenses" && segment.label === "火箭製作";
+            const hasRocketDetails = !segment.details && id === "expenses" && segment.label === "火箭製作";
             const triggerId = `${id}-category-${index}`;
             const panelId = `${id}-rocket-groups`;
 
             return (
               <Fragment key={segment.label}>
                 <div
-                  className={styles.legendRow}
+                  className={segment.details ? `${styles.legendRow} ${styles.detailRow}` : styles.legendRow}
                   data-active={activeIndex === index}
-                  data-dimmed={activeIndex !== null && activeIndex !== index}
+                  data-dimmed={!segment.details && activeIndex !== null && activeIndex !== index}
                   onPointerEnter={(event) => preview(event, index)}
                   onPointerLeave={() => endPreview(index)}
                   onPointerCancel={() => endPreview(index)}
                 >
                   <dt className={styles.category}>
                     <button
+                      ref={segment.details ? (button) => { legendButtons.current[index] = button; } : undefined}
                       type="button"
                       id={triggerId}
                       className={styles.categoryButton}
-                      aria-pressed={lockedIndex === index}
+                      aria-pressed={segment.details ? undefined : lockedIndex === index}
+                      aria-haspopup={segment.details ? "dialog" : undefined}
                       aria-expanded={hasRocketDetails ? isRocketExpanded : undefined}
                       aria-controls={hasRocketDetails ? panelId : undefined}
                       aria-describedby={`${id}-value-${index}`}
@@ -160,6 +172,10 @@ export default function BudgetChartCard({
                       }}
                       onBlur={() => setFocusedIndex(null)}
                       onClick={() => {
+                        if (segment.details) {
+                          openDetails(index);
+                          return;
+                        }
                         toggleSelection(index);
                         if (hasRocketDetails) setIsRocketExpanded((current) => !current);
                       }}
@@ -170,6 +186,11 @@ export default function BudgetChartCard({
                         aria-hidden="true"
                       />
                       <span>{segment.label}</span>
+                      {segment.details && (
+                        <svg className={styles.chevron} viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                          <path d="m7.5 5 5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
                       {hasRocketDetails && (
                         <svg className={styles.chevron} viewBox="0 0 20 20" aria-hidden="true" focusable="false">
                           <path d="m5 7.5 5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
@@ -203,7 +224,7 @@ export default function BudgetChartCard({
                                 className={styles.groupButton}
                                 aria-haspopup="dialog"
                                 onClick={(event) => {
-                                  purchaseTriggerRef.current = event.currentTarget;
+                                  dialogTriggerRef.current = event.currentTarget;
                                   setPurchaseGroup(group);
                                 }}
                               >
@@ -221,9 +242,19 @@ export default function BudgetChartCard({
           })}
         </dl>
       </div>
-      {note && <p className={styles.chartNote}>{note}</p>}
       {purchaseGroup && (
-        <PurchaseDetailsModal group={purchaseGroup} returnFocusRef={purchaseTriggerRef} onClose={() => setPurchaseGroup(null)} />
+        <PurchaseDetailsModal group={purchaseGroup} returnFocusRef={dialogTriggerRef} onClose={() => setPurchaseGroup(null)} />
+      )}
+      {detailsSegment?.details && (
+        <BudgetBreakdownModal
+          label={detailsSegment.label}
+          color={detailsSegment.color}
+          formattedAmount={detailsSegment.formattedAmount}
+          percentage={detailsSegment.percentage}
+          items={detailsSegment.details}
+          returnFocusRef={dialogTriggerRef}
+          onClose={() => setDetailsIndex(null)}
+        />
       )}
     </section>
   );

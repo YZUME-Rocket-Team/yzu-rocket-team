@@ -6,6 +6,7 @@ import BudgetChartCard from "@/app/budget/BudgetChartCard";
 import { missionGoals } from "@/data/siteContent";
 import { budgetTotal2027, formatBudgetAmount, planBudget2027, planGoalMedia } from "@/data/plan2027";
 import CompetitionCalendar from "./CompetitionCalendar";
+import DonationProgressCard from "./DonationProgressCard";
 import PlanIcon from "./PlanIcon";
 import PlanReveal from "./PlanReveal";
 import styles from "./plan.module.css";
@@ -73,11 +74,7 @@ export default function Plan2027Page() {
             <div className={styles.budgetIntro}>
               <h2 id="budget-heading" className={styles.sectionTitle}>2027 建議預算</h2>
               <p>以下依下一階段的開發、測試與參賽需求，規劃各項支出用途。</p>
-              <div className={styles.fundingTarget}>
-                <PlanIcon name="target" />
-                <div><p>2027 募款目標</p><strong>{formatBudgetAmount(budgetTotal2027)}</strong></div>
-              </div>
-              <p className={styles.budgetNote}>讓下一枚火箭更完整、更可靠。</p>
+              <DonationProgressCard />
             </div>
             <BudgetChartCard
               id="budget-2027"
@@ -85,15 +82,7 @@ export default function Plan2027Page() {
               totalLabel="預算分配"
               totalAmount={formatBudgetAmount(budgetTotal2027)}
               embedded
-              note="各項金額為建議支出規劃；募款目標非已募金額。"
-              segments={planBudget2027.map((item) => ({
-                label: item.label,
-                color: item.color,
-                fraction: item.value / budgetTotal2027,
-                offset: item.offset / 100,
-                formattedAmount: item.amount,
-                percentage: `${item.percentage}%`,
-              }))}
+              segments={planBudget2027}
             />
           </div>
         </section>

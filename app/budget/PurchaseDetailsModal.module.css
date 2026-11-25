@@ -231,6 +231,53 @@
 .scopeNote { margin: 0.875rem 0 0; color: #cbd5e1; font-size: 0.8125rem; line-height: 1.8; }
 .scopeNote { margin-top: 1rem; color: #94a3b8; }
 
+.breakdownDialog {
+  max-width: 36rem;
+  border-color: color-mix(in srgb, var(--category-accent) 45%, transparent);
+}
+
+.breakdownDialog .eyebrow,
+.breakdownDialog .table tfoot {
+  color: var(--category-accent);
+}
+
+.breakdownDialog .description {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.breakdownDialog .description strong {
+  color: #f8fafc;
+}
+
+.breakdownDialog .scrollArea {
+  overflow: auto;
+}
+
+.breakdownDialog .table {
+  display: table;
+}
+
+.breakdownDialog .table :is(th, td) {
+  padding-inline: 0.5rem;
+}
+
+.breakdownDialog .table :is(th, td):last-child {
+  width: 7.25rem;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.breakdownDialog .table tfoot :is(th, td) {
+  border-bottom: 0;
+  background: rgb(255 255 255 / 3%);
+  color: inherit;
+  font-weight: 700;
+}
+
 @keyframes reveal { from { opacity: 0; } to { opacity: 1; } }
 
 @media (min-width: 768px) {
